@@ -2,6 +2,7 @@
  * Please fill the functions in this file.
  */
 #include "pa01.h"
+#include<stdio.h>
 
 /* == Note 1 :: C does not initialize variables for you ==
  *
@@ -44,7 +45,15 @@
 */
 int addElement(int * array, int length)
 {
-    return 0;
+  int index; //Array index variable
+  int sum = 0; //The sum of the array's values
+
+  for(index = 0; index < length; index++)
+  {
+    sum += array[index];
+  }
+
+  return sum;
 }
 /*
  * =================================================================
@@ -70,7 +79,17 @@ int addElement(int * array, int length)
 */
 int countNegative(int * array, int length)
 {
-    return 0;
+  int index; //Array index variable
+  int negative = 0; //Number of total negative numbers
+
+  for(index = 0; index < length; index++)
+  {
+    if(array[index] < 0)
+    {
+      negative++;
+    }
+  }
+  return negative;
 }
 /*
  * =================================================================
@@ -118,5 +137,17 @@ int countNegative(int * array, int length)
 */
 int isIncreasing(int * array, int length)
 {
-    return 0;
+  int index = 1; //Array index variable
+  int check = 1; //Checks whether the array is increasing or decreasing
+
+  do
+  {
+    if(array[index] <= array[index - 1])
+    {
+      check = 0;
+    }
+    index++;
+  }while(check == 1 && index < length);
+
+  return check;
 }
