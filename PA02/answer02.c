@@ -102,7 +102,7 @@ void my_strlower(char * s)
 void my_strcpy(char * s1, const char * s2)
 {
   int ind = 0; //Array index value
-  
+
   do
   {
     s1[ind] = s2[ind];
