@@ -1,4 +1,3 @@
-
 #include "pa02.h"
 
 /**
@@ -9,7 +8,16 @@
  */
 int my_strlen(const char * s)
 {
-    return 0;
+  int ind = 0; //Array index value
+  int len = 0; //Length of the array
+
+  while(s[ind] != 0)
+  {
+    len++;
+    ind++;
+  }
+
+  return len;
 }
 
 /**
@@ -20,7 +28,19 @@ int my_strlen(const char * s)
  */
 int my_countchar(const char * s, char c)
 {
-    return 0;
+  int ind = 0; //Array index value
+  int count = 0; //Number of occurences of the character
+
+  while(s[ind] != 0)
+  {
+    if(s[ind] == c)
+    {
+      count++;
+    }
+    ind++;
+  }
+
+  return count;
 }
 
 /**
@@ -34,7 +54,16 @@ int my_countchar(const char * s, char c)
  */
 void my_strupper(char * s)
 {
+  int ind = 0; //Array index value
 
+  while(s[ind] != 0)
+  {
+    if(s[ind] < 123 && s[ind] > 96)
+    {
+      s[ind] -= 32;
+    }
+    ind++;
+  }
 }
 
 /**
@@ -48,7 +77,16 @@ void my_strupper(char * s)
  */
 void my_strlower(char * s)
 {
+  int ind = 0; //Array index value
 
+  while(s[ind] != 0)
+  {
+    if(s[ind] < 91 && s[ind] > 64)
+    {
+      s[ind] += 32;
+    }
+    ind++;
+  }
 }
 
 /**
@@ -63,7 +101,13 @@ void my_strlower(char * s)
  */
 void my_strcpy(char * s1, const char * s2)
 {
-
+  int ind = 0; //Array index value
+  
+  do
+  {
+    s1[ind] = s2[ind];
+    ind++;
+  }while(s1[ind] != 0 || s2[ind] != 0);
 }
 
 /**
@@ -78,7 +122,21 @@ void my_strcpy(char * s1, const char * s2)
  */
 void my_strncpy(char * s1, const char * s2, int num)
 {
-    
+  int ind = 0; //Array index value
+
+  do 
+  {
+    if(ind < num)
+    {
+      s1[ind] = s2[ind];
+    }
+    else
+    {
+      s1[ind] = 0;
+    }
+
+    ind++;
+  }while(s1[ind] != 0 || s2[ind] != 0);
 }
 
 
@@ -93,7 +151,16 @@ void my_strncpy(char * s1, const char * s2, int num)
  */
 void my_strcat(char * s1, const char * s2) 
 {
-    
+  int ind = 0; //Array index value
+  int len = 0; //Array length
+
+  while(s1[len++] != 0);
+
+  while(s2[ind] != 0)
+  {
+    s1[len - 1] = s2[ind++];
+    len++;
+  }
 }
 
 /** 
@@ -107,7 +174,24 @@ void my_strcat(char * s1, const char * s2)
  */
 void my_strncat(char * s1, const char * s2, int num)
 {
-   
+  int ind = 0; //Array index value
+  int len = 0; //Array length
+
+  while(s1[len++] != 0);
+
+  do
+  {
+    if(ind < num)
+    {
+      s1[len - 1] = s2[ind++];
+    }
+    else
+    {
+      s1[len - 1] = 0;
+    }
+    len++;
+    ind++;
+  }while(ind < num || s1[ind] != 0 || s2[ind] != 0);
 }
 
 /**
@@ -122,7 +206,7 @@ void my_strncat(char * s1, const char * s2, int num)
 
 const char *my_strstr(const char * s1, const char * s2)
 {
-    return NULL;
+  return NULL;
 }
 
 
@@ -155,7 +239,7 @@ const char *my_strstr(const char * s1, const char * s2)
  */
 void my_strinsert(char *s1, const char *s2, int pos)
 {
-  
+
 }
 
 /**
@@ -190,6 +274,6 @@ void my_strinsert(char *s1, const char *s2, int pos)
  */
 void my_strdelete(char *s, int pos, int length)
 {
-  
+
 }
 
