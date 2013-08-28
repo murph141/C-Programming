@@ -11,7 +11,7 @@ int my_strlen(const char * s)
   int ind = 0; //Array index value
   int len = 0; //Length of the array
 
-  while(s[ind] != 0)
+  while(s[ind] != '\0')
   {
     len++;
     ind++;
@@ -31,7 +31,7 @@ int my_countchar(const char * s, char c)
   int ind = 0; //Array index value
   int count = 0; //Number of occurences of the character
 
-  while(s[ind] != 0)
+  while(s[ind] != '\0')
   {
     if(s[ind] == c)
     {
@@ -56,7 +56,7 @@ void my_strupper(char * s)
 {
   int ind = 0; //Array index value
 
-  while(s[ind] != 0)
+  while(s[ind] != '\0')
   {
     if(s[ind] < 123 && s[ind] > 96)
     {
@@ -79,7 +79,7 @@ void my_strlower(char * s)
 {
   int ind = 0; //Array index value
 
-  while(s[ind] != 0)
+  while(s[ind] != '\0')
   {
     if(s[ind] < 91 && s[ind] > 64)
     {
@@ -107,7 +107,7 @@ void my_strcpy(char * s1, const char * s2)
   {
     s1[ind] = s2[ind];
     ind++;
-  }while(s1[ind] != 0 || s2[ind] != 0);
+  }while(s1[ind] != '\0' || s2[ind] != '\0');
 }
 
 /**
@@ -136,7 +136,7 @@ void my_strncpy(char * s1, const char * s2, int num)
     }
 
     ind++;
-  }while(s1[ind] != 0 || s2[ind] != 0);
+  }while(s1[ind] != '\0' || s2[ind] != '\0');
 }
 
 
@@ -154,9 +154,9 @@ void my_strcat(char * s1, const char * s2)
   int ind = 0; //Array index value
   int len = 0; //Array length
 
-  while(s1[len++] != 0);
+  while(s1[len++] != '\0');
 
-  while(s2[ind] != 0)
+  while(s2[ind] != '\0')
   {
     s1[len - 1] = s2[ind++];
     len++;
@@ -177,7 +177,7 @@ void my_strncat(char * s1, const char * s2, int num)
   int ind = 0; //Array index value
   int len = 0; //Array length
 
-  while(s1[len++] != 0);
+  while(s1[len++] != '\0');
 
   do
   {
@@ -191,7 +191,7 @@ void my_strncat(char * s1, const char * s2, int num)
     }
     len++;
     ind++;
-  }while(ind < num || s1[ind] != 0 || s2[ind] != 0);
+  }while(ind < num || s1[ind] != '\0' || s2[ind] != '\0');
 }
 
 /**
