@@ -18,15 +18,15 @@ cleanup()
 echo
 echo "./$EXEC $INF > $OUTF"
 ./$EXEC $INF > $OUTF
+PASS=$?
 echo "cat $OUTF"
 echo
 cat $OUTF | sed 's/^/   /'
-echo -n "Checking expected output: $EXPECTEDF - "
+echo
 
 # -- Check program output -- #
-
+echo -n "Checking expected output: $EXPECTEDF - "
 OUT_OKAY=0
-
 diff -w $OUTF $EXPECTEDF > $TMPF && OUT_OKAY=1 
 
 (( $OUT_OKAY == 1 )) && echo "okay"
@@ -35,23 +35,25 @@ diff -w $OUTF $EXPECTEDF > $TMPF && OUT_OKAY=1
     && echo \
     && cat $EXPECTEDF | sed 's/^/   /' 
 
-echo -n "Performing memory-check with valgrind: - "
 
 # -- Check valgrind output -- #
-
 VALG_OKAY=0
+if (( $OUT_OKAY == 1 )) ; then
+    echo -n "Performing memory-check with valgrind: - "
 
-valgrind --tool=memcheck --leak-check=full --verbose \
-    --log-file=$VALGF ./$EXEC $INF > $OUTF
+    valgrind --tool=memcheck --leak-check=full --verbose \
+	--log-file=$VALGF ./$EXEC $INF > $OUTF
 
-cat "$VALGF" | grep -q "ERROR SUMMARY: 0 errors from 0 contexts" && VALG_OKAY=1
+    cat "$VALGF" | grep -q "ERROR SUMMARY: 0 errors from 0 contexts" && VALG_OKAY=1
 
-(( $VALG_OKAY == 1 )) && echo "okay"
-(( $VALG_OKAY != 1 )) \
-    && echo "FAIL!" \
-    && echo "Examine the file '$VALGF' to diagnose the problem."
+    (( $VALG_OKAY == 1 )) && echo "okay"
+    (( $VALG_OKAY != 1 )) \
+	&& echo "FAIL!" \
+	&& echo "Examine the file '$VALGF' to diagnose the problem."
+fi
 
 echo
+
 (( $OUT_OKAY == 1 )) && (( $VALG_OKAY == 1 )) && exit 0
 exit 1
 
