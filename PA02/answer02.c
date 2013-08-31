@@ -213,7 +213,7 @@ const char *my_strstr(const char * s1, const char * s2)
 
   const char *address;
   address = NULL;
-  
+
   length = my_strlen(s1);
   length2 = my_strlen(s2);
 
@@ -278,27 +278,38 @@ void my_strinsert(char *s1, const char *s2, int pos)
   int length; //Length of string s1
   int length2; //Length of string s2
   int offset = 0; //Offset of array index
+  int ind = 0;
 
   length = my_strlen(s1);
   length2 = my_strlen(s2);
 
-  if(pos > length)
+  while(length2)
   {
-    while(length2)
+    if(pos > length)
     {
-      s1[length] = s2[offset];
-      offset++;
-      length2--;
+      while(length2)
+      {
+        s1[length + offset] = s2[offset];
+        offset++;
+        length2--;
+      }
     }
-  }
-  else
-  {
-    while(length2)
+    else
     {
-      s1[pos + offset] = s1[offset];
-      s1[offset] = s2[offset];
-      offset++;
-      length2--;
+      while(pos > offset++);
+
+      while(length2 != pos)
+      {
+        s1[offset + length] = s1[offset];
+        s1[offset++] = s2[ind++];
+        length2--;
+      }
+
+      while(length2)
+      {
+        s1[offset] = s2[ind++];
+        length2--;
+      }
     }
   }
 }
