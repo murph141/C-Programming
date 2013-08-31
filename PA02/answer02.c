@@ -206,7 +206,43 @@ void my_strncat(char * s1, const char * s2, int num)
 
 const char *my_strstr(const char * s1, const char * s2)
 {
-  return NULL;
+  int length; //Length of s1
+  int length2; //Length of s2
+  int ind = 0; //Index value
+  int add = 0; //Index offset value
+
+  const char *address;
+  address = NULL;
+  
+  length = my_strlen(s1);
+  length2 = my_strlen(s2);
+
+  while(length > 0)
+  {
+    if(s1[ind] == s2[0])
+    {
+      add = 0;
+
+      while(s1[ind + add] == s2[add] && length != 0)
+      {
+        add++;
+        length--;
+      }
+      if(length == 0 && length2 == add)
+      {
+        address = &s1[ind];
+        length = 1;
+      }
+      else
+      {
+        ind += add;
+      }
+    }
+    length--;
+    ind++;
+  }
+
+  return address;
 }
 
 
@@ -239,7 +275,32 @@ const char *my_strstr(const char * s1, const char * s2)
  */
 void my_strinsert(char *s1, const char *s2, int pos)
 {
+  int length; //Length of string s1
+  int length2; //Length of string s2
+  int offset = 0; //Offset of array index
 
+  length = my_strlen(s1);
+  length2 = my_strlen(s2);
+
+  if(pos > length)
+  {
+    while(length2)
+    {
+      s1[length] = s2[offset];
+      offset++;
+      length2--;
+    }
+  }
+  else
+  {
+    while(length2)
+    {
+      s1[pos + offset] = s1[offset];
+      s1[offset] = s2[offset];
+      offset++;
+      length2--;
+    }
+  }
 }
 
 /**
@@ -276,4 +337,3 @@ void my_strdelete(char *s, int pos, int length)
 {
 
 }
-
