@@ -275,43 +275,17 @@ const char *my_strstr(const char * s1, const char * s2)
  */
 void my_strinsert(char *s1, const char *s2, int pos)
 {
-  int length; //Length of string s1
-  int length2; //Length of string s2
-  int offset = 0; //Offset of array index
-  int ind = 0;
+  char s3[1500] = ""; //Allocate enough space for array
 
-  length = my_strlen(s1);
-  length2 = my_strlen(s2);
+  my_strncpy(s3,s1,pos); //Put any characters from first array at beggining of array s3
 
-  while(length2)
-  {
-    if(pos > length)
-    {
-      while(length2)
-      {
-        s1[length + offset] = s2[offset];
-        offset++;
-        length2--;
-      }
-    }
-    else
-    {
-      while(pos > offset++);
+  my_strcat(s3,s2); //Concatenate the result of the string copy with the string being inserted
 
-      while(length2 != pos)
-      {
-        s1[offset + length] = s1[offset];
-        s1[offset++] = s2[ind++];
-        length2--;
-      }
+  my_strcat(s3,s1 + pos); //Concatenate the result of the string concatenation and the rest of the original string
 
-      while(length2)
-      {
-        s1[offset] = s2[ind++];
-        length2--;
-      }
-    }
-  }
+  s1[pos] = '\0'; //Add the null character to the end of the array to avoid any potential problems
+  
+  my_strcpy(s1, s3); //Copy the temporary string to the resultant string
 }
 
 /**
@@ -346,5 +320,13 @@ void my_strinsert(char *s1, const char *s2, int pos)
  */
 void my_strdelete(char *s, int pos, int length)
 {
+  int offset = 0;
 
+  while((offset - 1) != length)
+  {
+    s[offset] = s[offset + pos];
+    offset++;
+  }
+
+  s[my_strlen(s) - 1] = '\0';
 }
