@@ -246,7 +246,6 @@ const char *my_strstr(const char * s1, const char * s2)
 }
 
 
-
 /**
  * Insert a null-terminated string s2 in the null-terminated string s1
  * at position pos.  All characters following position pos in s1 will
@@ -275,17 +274,14 @@ const char *my_strstr(const char * s1, const char * s2)
  */
 void my_strinsert(char *s1, const char *s2, int pos)
 {
-  char s3[1500] = ""; //Allocate enough space for array
-
-  my_strncpy(s3,s1,pos); //Put any characters from first array at beggining of array s3
-
-  my_strcat(s3,s2); //Concatenate the result of the string copy with the string being inserted
-
-  my_strcat(s3,s1 + pos); //Concatenate the result of the string concatenation and the rest of the original string
-
-  s1[pos] = '\0'; //Add the null character to the end of the array to avoid any potential problems
-  
-  my_strcpy(s1, s3); //Copy the temporary string to the resultant string
+  if(pos >= my_strlen(s1))
+  {
+    my_strcat(s1, s2);
+  }
+  else
+  {
+    my_strcpy(s1 + pos, s2);
+  }
 }
 
 /**
@@ -320,13 +316,16 @@ void my_strinsert(char *s1, const char *s2, int pos)
  */
 void my_strdelete(char *s, int pos, int length)
 {
-  int offset = 0;
-
-  while((offset - 1) != length)
+  if(pos >= my_strlen(s))
   {
-    s[offset] = s[offset + pos];
-    offset++;
+    //Do nothing if the position is greater than the string length
   }
-
-  s[my_strlen(s) - 1] = '\0';
+  else if(length > (my_strlen(s) - pos))
+  {
+    s[pos] = '\0'; //Terminate the string at the position since the length is greater than the remainder of the string
+  }
+  else
+  {
+    my_strcpy(s + pos, s + pos + length); //Copy the offset string into the offset string to get the desired string
+  }
 }
