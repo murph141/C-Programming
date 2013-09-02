@@ -274,6 +274,24 @@ const char *my_strstr(const char * s1, const char * s2)
  */
 void my_strinsert(char *s1, const char *s2, int pos)
 {
+  char *tem;
+  tem = malloc(my_strlen(s1) + my_strlen(s2) + 1);
+
+  tem[0] = '\0';
+
+  my_strncpy(tem, s1, pos);
+
+  tem[pos] = '\0';
+
+  my_strcat(tem, s2);
+
+  my_strcat(tem, s1 + pos);
+
+  tem[my_strlen(s1) + my_strlen(s2)] = '\0';
+
+  my_strcpy(s1, tem);
+
+  free(tem);
 }
 
 /**
@@ -308,16 +326,4 @@ void my_strinsert(char *s1, const char *s2, int pos)
  */
 void my_strdelete(char *s, int pos, int length)
 {
-  if(pos >= my_strlen(s))
-  {
-    //Do nothing if the position is greater than the string length
-  }
-  else if(length > (my_strlen(s) - pos))
-  {
-    s[pos] = '\0'; //Terminate the string at the position since the length is greater than the remainder of the string
-  }
-  else
-  {
-    my_strcpy(s + pos, s + pos + length); //Copy the offset string into the offset string to get the desired string
-  }
 }
