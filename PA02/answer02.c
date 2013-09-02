@@ -275,9 +275,8 @@ const char *my_strstr(const char * s1, const char * s2)
 void my_strinsert(char *s1, const char *s2, int pos)
 {
   char *tem;
-  tem = malloc(my_strlen(s1) + my_strlen(s2) + 1);
-
-  tem[0] = '\0';
+  int space = my_strlen(s1) + my_strlen(s2) + 1;
+  tem = malloc(sizeof(char) * space);
 
   my_strncpy(tem, s1, pos);
 
@@ -326,4 +325,19 @@ void my_strinsert(char *s1, const char *s2, int pos)
  */
 void my_strdelete(char *s, int pos, int length)
 {
+  char *tem;
+  tem = malloc((pos + length + 1));
+
+  my_strncpy(tem, s, pos);
+
+  tem[pos] = '\0';
+
+  my_strcat(tem, s + pos + length);
+
+  tem[pos + length] = '\0';
+
+  my_strcpy(s, tem);
+
+  free(tem);
 }
+
