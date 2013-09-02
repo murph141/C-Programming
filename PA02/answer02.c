@@ -274,14 +274,6 @@ const char *my_strstr(const char * s1, const char * s2)
  */
 void my_strinsert(char *s1, const char *s2, int pos)
 {
-  if(pos >= my_strlen(s1))
-  {
-    my_strcat(s1, s2);
-  }
-  else
-  {
-    my_strcpy(s1 + pos, s2);
-  }
 }
 
 /**
