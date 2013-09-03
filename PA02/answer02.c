@@ -60,7 +60,7 @@ void my_strupper(char * s)
   {
     if(s[ind] < 123 && s[ind] > 96)
     {
-      s[ind] -= 32;
+      s[ind] -= 32; //ASCII difference between capital and lowercase letters
     }
     ind++;
   }
@@ -83,7 +83,7 @@ void my_strlower(char * s)
   {
     if(s[ind] < 91 && s[ind] > 64)
     {
-      s[ind] += 32;
+      s[ind] += 32; //ASCII difference between capital and lowercase letters
     }
     ind++;
   }
@@ -274,23 +274,26 @@ const char *my_strstr(const char * s1, const char * s2)
  */
 void my_strinsert(char *s1, const char *s2, int pos)
 {
-  char *tem;
-  int space = my_strlen(s1) + my_strlen(s2) + 1;
-  tem = malloc(sizeof(char) * space);
+  int len1 = my_strlen(s1); //Length of string 1
+  int len2 = my_strlen(s2); //Length of string 2
+  int ind; //Array index value
 
-  my_strncpy(tem, s1, pos);
+  if(pos > len1)
+  {
+    pos = len1; //Check to make sure position isn't outside of the array
+  }
 
-  tem[pos] = '\0';
+  for(ind = (len1 + len2); ind >= (pos + len2); ind--)
+  {
+    s1[ind] = s1[ind - len2];
+  }
 
-  my_strcat(tem, s2);
+  for(ind = pos; ind < pos + len2; ind++)
+  {
+    s1[ind] = s2[ind - pos];
+  }
 
-  my_strcat(tem, s1 + pos);
-
-  tem[my_strlen(s1) + my_strlen(s2)] = '\0';
-
-  my_strcpy(s1, tem);
-
-  free(tem);
+  //No need for null character, it was already taken care of in the copying
 }
 
 /**
@@ -325,19 +328,24 @@ void my_strinsert(char *s1, const char *s2, int pos)
  */
 void my_strdelete(char *s, int pos, int length)
 {
-  char *tem;
-  tem = malloc((pos + length + 1));
+  int len = my_strlen(s); //Length of the given string
+  int ind; //Array index vlue
 
-  my_strncpy(tem, s, pos);
+  if(pos > len)
+  {
+  }
+  else
+  {
+    if(length > len - pos)
+    {
+      length = len - pos; //Make sure values aren't out of given range
+    }
 
-  tem[pos] = '\0';
+    for(ind = pos; ind < len - length + pos; ind++)
+    {
+      s[ind] = s[length + ind];
+    }
 
-  my_strcat(tem, s + pos + length);
-
-  tem[pos + length] = '\0';
-
-  my_strcpy(s, tem);
-
-  free(tem);
+    s[len - length] = '\0'; //Append null character to end string
+  }
 }
-
