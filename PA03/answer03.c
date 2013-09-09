@@ -85,11 +85,15 @@ int * readIntegers(const char * filename, int * numberOfIntegers)
 
   numberOfIntegers = malloc(sizeof(int) * num);
 
+  fseek(pFile, 0, SEEK_SET);
   if(!fseek(pFile, 0, SEEK_SET))
   {
     num = 0;
 
-    while(fscanf(pFile, "%d", &numberOfIntegers[num++]) == 1);
+    while(fscanf(pFile, "%d", &numberOfIntegers[num]) == 1)
+    {
+      num++;
+    }
   }
   else
   {
