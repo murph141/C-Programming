@@ -2,6 +2,17 @@
 #include "pa03.h"
 #include <stdio.h>
 #include <stdlib.h>
+void swapvalues(int *, int *);
+
+void swapvalues(int * value1, int * value2)
+{
+  //  printf("1: %d 2: %d\n", *value1, *value2);
+  //  printf("HERE\n");
+  int temp;
+  temp = *value1;
+  *value1 = *value2;
+  *value2 = temp;
+}
 
 /**
  * Read a file of integers.
@@ -73,7 +84,7 @@ int * readIntegers(const char * filename, int * numberOfIntegers)
   }
 
   numberOfIntegers = malloc(sizeof(int) * num);
-  
+
   if(!fseek(pFile, 0, SEEK_SET))
   {
     num = 0;
@@ -84,7 +95,7 @@ int * readIntegers(const char * filename, int * numberOfIntegers)
   {
     numberOfIntegers = NULL;
   }
-  
+
   fclose(pFile);
 
   return numberOfIntegers;
@@ -129,7 +140,30 @@ int * readIntegers(const char * filename, int * numberOfIntegers)
  */
 void sort(int * arr, int length)
 {
+  int pivot;
+  int lower = 0;
+  int upper = length - 1;
+  if(length >= 2)
+  {
+    while(lower < upper)
+    {
+      pivot = length / 2;
 
+      while(arr[lower] < arr[pivot])
+      {
+        lower++;
+      }
+      while(arr[upper] > arr[pivot])
+      {
+        upper--;
+      }
+
+      swapvalues(&arr[lower], &arr[upper]);
+
+    }
+    sort(arr, lower);
+    sort(&arr[lower + 1], length - lower - 1);
+  }
 }
 
 /**
@@ -178,7 +212,18 @@ void sort(int * arr, int length)
  */
 int search(int * arr, int length, int key)
 {
+  if(arr[length / 2] == key)
+  {
+    return (length / 2);
+  }
+  else if(arr[length / 2] > key)
+  {
+    search(arr, (length / 2), key);
+  }
+  else
+  {
+    search(&arr[(length / 2) + 1], (length / 2) - 1 + length % 2, key);
+  }
+
   return -1;
 }
-
-
