@@ -2,6 +2,7 @@
 #include "pa03.h"
 #include <stdio.h>
 #include <stdlib.h>
+int searchfx(int *, int, int);
 void swapvalues(int *, int *);
 
 void swapvalues(int * value1, int * value2)
@@ -73,36 +74,37 @@ void swapvalues(int * value1, int * value2)
 
 int * readIntegers(const char * filename, int * numberOfIntegers)
 {
-  int num = 0;
   int temp = 0;
+  int num;
+  int * arr;
   FILE * pFile;
   pFile = fopen(filename, "r");
 
   while(fscanf(pFile, "%d", &temp) == 1)
   {
-    num++;
+    (*numberOfIntegers)++;
   }
 
-  numberOfIntegers = malloc(sizeof(int) * num);
+  arr = malloc(sizeof(int) * (*numberOfIntegers));
 
   fseek(pFile, 0, SEEK_SET);
   if(!fseek(pFile, 0, SEEK_SET))
   {
     num = 0;
 
-    while(fscanf(pFile, "%d", &numberOfIntegers[num]) == 1)
+    while(fscanf(pFile, "%d", &arr[num]) == 1)
     {
       num++;
     }
   }
   else
   {
-    numberOfIntegers = NULL;
+    arr = NULL;
   }
 
   fclose(pFile);
 
-  return numberOfIntegers;
+  return arr;
 }
 
 /**
@@ -216,18 +218,13 @@ void sort(int * arr, int length)
  */
 int search(int * arr, int length, int key)
 {
-  if(arr[length / 2] == key)
-  {
-    return (length / 2);
-  }
-  else if(arr[length / 2] > key)
-  {
-    search(arr, (length / 2), key);
-  }
-  else
-  {
-    search(&arr[(length / 2) + 1], (length / 2) - 1 + length % 2, key);
-  }
+  int a;
+  a = searchfx(arr, length, key);
 
-  return -1;
+  return a;
+}
+
+int searchfx(int * arr, int length, int key)
+{
+  if(
 }
