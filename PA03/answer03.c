@@ -2,14 +2,18 @@
 #include "pa03.h"
 #include <stdio.h>
 #include <stdlib.h>
-int searchfx(int *, int, int);
+int searchfx(int *, int, int, int, int);
 void swapvalues(int *, int *);
+
+/*
+ * This function swaps the values of the upper
+ * and lower values in the quicksort that are
+ * provided to it.
+*/
 
 void swapvalues(int * value1, int * value2)
 {
-  //  printf("1: %d 2: %d\n", *value1, *value2);
-  //  printf("HERE\n");
-  int temp;
+  int temp; //Temporary variable to swap values
   temp = *value1;
   *value1 = *value2;
   *value2 = temp;
@@ -74,18 +78,18 @@ void swapvalues(int * value1, int * value2)
 
 int * readIntegers(const char * filename, int * numberOfIntegers)
 {
-  int temp = 0;
-  int num;
-  int * arr;
+  int temp = 0; //Used to temporarily store the values that are input from the file
+  int num; //Used as a counter variable when assigning values to the allocated array arr
+  int * arr; //Array that will be allocated once values are passed in
   FILE * pFile;
-  pFile = fopen(filename, "r");
+  pFile = fopen(filename, "r"); //Open the file for reading
 
   while(fscanf(pFile, "%d", &temp) == 1)
   {
     (*numberOfIntegers)++;
   }
 
-  arr = malloc(sizeof(int) * (*numberOfIntegers));
+  arr = malloc(sizeof(int) * (*numberOfIntegers)); //Allocate space according to the file size
 
   fseek(pFile, 0, SEEK_SET);
   if(!fseek(pFile, 0, SEEK_SET))
@@ -102,7 +106,7 @@ int * readIntegers(const char * filename, int * numberOfIntegers)
     arr = NULL;
   }
 
-  fclose(pFile);
+  fclose(pFile); //Close the file
 
   return arr;
 }
@@ -146,15 +150,14 @@ int * readIntegers(const char * filename, int * numberOfIntegers)
  */
 void sort(int * arr, int length)
 {
-  int pivot;
+  int pivot = 0; //Use first position as pivot position
   int lower = 0;
   int upper = length - 1;
+
   if(length >= 2)
   {
     while(lower < upper)
     {
-      pivot = length / 2;
-
       while(arr[lower] < arr[pivot])
       {
         lower++;
@@ -167,8 +170,9 @@ void sort(int * arr, int length)
       swapvalues(&arr[lower], &arr[upper]);
 
     }
-    sort(arr, lower);
-    sort(&arr[lower + 1], length - lower - 1);
+
+    sort(arr, lower); //Sort the lower half of the array first
+    sort(&arr[lower + 1], length - lower - 1); //Sort the upper half of the array after
   }
 }
 
@@ -216,15 +220,56 @@ void sort(int * arr, int length)
  * }
  * return -1;
  */
+
 int search(int * arr, int length, int key)
 {
-  int a;
-  a = searchfx(arr, length, key);
+  int a; //Variable used to take returning function value
+  a = searchfx(arr, length, key, 0 , length - 1);
 
   return a;
 }
 
-int searchfx(int * arr, int length, int key)
-{
-  if(
+/*
+ * This function uses a recursive binary search
+ * that takes an array, its length, a value to find,
+ * and a lower and upper bound.  The lower and upper
+ * bounds are present because the functions needs to 
+ * keep track of the values that it has gone through
+*/
+
+int searchfx(int * arr, int length, int key, int low, int high)
+{ 
+  int mid = (low + high) / 2; //Middle value is the average of the lower and higher values
+  int test; //Test is used to return values recursively so when the value is found, it will keep being returned
+
+  if(high < low)
+  {
+    // Check whether you have reached the end of your array
+    // Two possible outcomes, value present or not present
+    if(arr[mid] == key)
+    {
+      test = mid;
+    }
+    else
+    {
+      test = -1;
+    }
+  }
+  //Check if mid is the value
+  else if(arr[mid] == key)
+  {
+    test = mid;
+  }
+  //If key is greater than the mid, recall function
+  else if(key > arr[mid])
+  {
+    test = searchfx(arr, high - mid, key, mid + 1, high);
+  }
+  //If key is less than mid, recall function
+  else if(key < arr[mid])
+  {
+    test = searchfx(arr, mid, key, low, mid - 1);
+  }
+  
+  return test; //Return test recursively
 }
