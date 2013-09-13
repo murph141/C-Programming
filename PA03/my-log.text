@@ -1,3 +1,15 @@
+commit 0e24ccfd8dda1d78f23b7ae40b7e159c8ac62861
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Thu Sep 12 21:01:59 2013 -0400
+
+    Fixed error check
+
+commit ad7820f3615d264512b3a5507d64c3ffa0db7901
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Tue Sep 10 21:23:28 2013 -0400
+
+    Finishing Touches to PA03 Added
+
 commit 390dd3b68f6ae43bfd56b379fa504e824367a6a0
 Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
 Date:   Tue Sep 10 20:59:13 2013 -0400
