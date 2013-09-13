@@ -84,6 +84,11 @@ int * readIntegers(const char * filename, int * numberOfIntegers)
   FILE * pFile;
   pFile = fopen(filename, "r"); //Open the file for reading
 
+  if(pFile == NULL)
+  {
+    arr = NULL;
+  }
+
   while(fscanf(pFile, "%d", &temp) == 1)
   {
     (*numberOfIntegers)++;
@@ -91,7 +96,6 @@ int * readIntegers(const char * filename, int * numberOfIntegers)
 
   arr = malloc(sizeof(int) * (*numberOfIntegers)); //Allocate space according to the file size
 
-  fseek(pFile, 0, SEEK_SET);
   if(!fseek(pFile, 0, SEEK_SET))
   {
     num = 0;
@@ -166,11 +170,8 @@ void sort(int * arr, int length)
       {
         upper--;
       }
-
       swapvalues(&arr[lower], &arr[upper]);
-
     }
-
     sort(arr, lower); //Sort the lower half of the array first
     sort(&arr[lower + 1], length - lower - 1); //Sort the upper half of the array after
   }
