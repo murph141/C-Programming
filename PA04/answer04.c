@@ -34,7 +34,20 @@
 void partitionAll(int value)
 {
   printf("partitionAll %d\n", value);
-  
+
+  int i = 1;
+  int j = 0;
+
+  do
+  {
+    j = i;
+    printf("%d", i);
+    while(value - j++ > 0)
+    {
+      printf(" + %d", i);
+    }
+    printf("\n");
+  }while(i++ != value);
 }
 /*
  * =================================================================
