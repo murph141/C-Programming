@@ -12,13 +12,23 @@
  * needed is specified by MAXLENGTH in pa04.h.
  */
 
+//----------------------------
 #include "pa04.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 void partition(int, int *, int);
+
+void partitionInc(int, int *, int);
+int isIncreasing(int *);
+
+void partitionDec(int, int *, int);
+int isDecreasing(int *);
+
 void printArray(int, int *);
 int sumArray(int *);
+//-----------------------------
+
 
 int sumArray(int * arr)
 {
@@ -51,6 +61,7 @@ void printArray(int value, int * arr)
 }
 
 
+//Regular Partitioning
 void partition(int value, int * arr, int original)
 {
   int i;
@@ -74,10 +85,11 @@ void partition(int value, int * arr, int original)
       }
 
       arr[original - i] = 0; 
-      //printf("%d, %d, %d, %d\n", arr[0], arr[1], arr[2], value);
     }
   }
 }
+
+
 /*
  * =================================================================
  * This function prints all partitions of a positive integer value
@@ -123,8 +135,65 @@ void partitionAll(int value)
 
 void partitionIncreasing(int value)
 {
+  int * arr;
+  arr = malloc(sizeof(int) * value);
+  arr[0] = 0;
+
   printf("partitionIncreasing %d\n", value);
 
+  partitionInc(value, arr, value);
+}
+
+
+
+void partitionInc(int value, int * arr, int original)
+{
+  int i;
+
+  if(value >= 1)
+  {
+    for(i = 1; i <= value; i++)
+    {
+      arr[original - value] = i;
+
+      if(sumArray(arr) != original)
+      {
+        if(value > 1 && sumArray(arr) < original)
+        {
+          partitionInc(value - 1, arr, original);
+        }
+      }
+      else if(isIncreasing(arr))
+      {
+        printArray(original, arr);
+      }
+
+      arr[original - i] = 0; 
+    }
+  }
+}
+
+
+//Checks whether the numbers are increasing
+int isIncreasing(int * arr)
+{
+  int i = 0;
+  int j = 1;
+
+  while(arr[i + 1] != 0)
+  {
+    if(arr[i] < arr[i + 1])
+    {
+      j *= 1;
+    }
+    else
+    {
+      j *= 0;
+    }
+    i++;
+  }
+
+  return j;
 }
 
 /*
@@ -149,10 +218,66 @@ void partitionIncreasing(int value)
 
 void partitionDecreasing(int value)
 {
+  int * arr;
+  arr = malloc(sizeof(int) * value);
+  arr[0] = 0;
+
   printf("partitionDecreasing %d\n", value);
 
-
+  partitionDec(value, arr, value);
 }
+
+
+void partitionDec(int value, int * arr, int original)
+{
+  int i;
+
+  if(value >= 1)
+  {
+    for(i = 1; i <= value; i++)
+    {
+      arr[original - value] = i;
+
+      if(sumArray(arr) != original)
+      {
+        if(value > 1 && sumArray(arr) < original)
+        {
+          partitionDec(value - 1, arr, original);
+        }
+      }
+      else if(isDecreasing(arr))
+      {
+        printArray(original, arr);
+      }
+
+      arr[original - i] = 0; 
+    }
+  }
+}
+
+
+//Checks whether the numbers are increasing
+int isDecreasing(int * arr)
+{
+  int i = 0;
+  int j = 1;
+
+  while(arr[i + 1] != 0)
+  {
+    if(arr[i] > arr[i + 1])
+    {
+      j *= 1;
+    }
+    else
+    {
+      j *= 0;
+    }
+    i++;
+  }
+
+  return j;
+}
+
 
 /*
  * =================================================================
