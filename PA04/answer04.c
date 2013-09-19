@@ -25,6 +25,18 @@ int isIncreasing(int *);
 void partitionDec(int, int *, int);
 int isDecreasing(int *);
 
+void partOdd(int, int*, int);
+int isOdd(int *);
+
+void partEven(int, int*, int);
+int isEven(int *);
+
+void partOddEven(int, int*, int);
+int isOddEven(int *);
+
+void partPrime(int, int *, int);
+int isPrime(int *);
+
 void printArray(int, int *);
 int sumArray(int *);
 //-----------------------------
@@ -299,10 +311,65 @@ int isDecreasing(int * arr)
 
 void partitionOdd(int value)
 {
+  int * arr;
+  arr = malloc(sizeof(int) * value);
+  arr[0] = 0;
+
   printf("partitionOdd %d\n", value);
 
+  partOdd(value, arr, value);
 }
 
+
+void partOdd(int value, int * arr, int original)
+{
+  int i;
+
+  if(value >= 1)
+  {
+    for(i = 1; i <= value; i++)
+    {
+      arr[original - value] = i;
+
+      if(sumArray(arr) != original)
+      {
+        if(value > 1 && sumArray(arr) < original)
+        {
+          partOdd(value - 1, arr, original);
+        }
+      }
+      else if(isOdd(arr))
+      {
+        printArray(original, arr);
+      }
+
+      arr[original - i] = 0; 
+    }
+  }
+}
+
+
+//Checks whether the numbers are increasing
+int isOdd(int * arr)
+{
+  int i = 0;
+  int j = 1;
+
+  while(arr[i] != 0)
+  {
+    if(arr[i] % 2)
+    {
+      j *= 1;
+    }
+    else
+    {
+      j *= 0;
+    }
+    i++;
+  }
+
+  return j;
+}
 /*
  * =================================================================
  * This function prints even number only partitions of a positive integer value
@@ -324,8 +391,64 @@ void partitionOdd(int value)
 
 void partitionEven(int value)
 {
+  int * arr;
+  arr = malloc(sizeof(int) * value);
+  arr[0] = 0;
+
   printf("partitionEven %d\n", value);
 
+  partEven(value, arr, value);
+}
+
+
+void partEven(int value, int * arr, int original)
+{
+  int i;
+
+  if(value >= 1)
+  {
+    for(i = 1; i <= value; i++)
+    {
+      arr[original - value] = i;
+
+      if(sumArray(arr) != original)
+      {
+        if(value > 1 && sumArray(arr) < original)
+        {
+          partEven(value - 1, arr, original);
+        }
+      }
+      else if(isEven(arr))
+      {
+        printArray(original, arr);
+      }
+
+      arr[original - i] = 0; 
+    }
+  }
+}
+
+
+//Checks whether the numbers are increasing
+int isEven(int * arr)
+{
+  int i = 0;
+  int j = 1;
+
+  while(arr[i] != 0)
+  {
+    if(arr[i] % 2 == 0)
+    {
+      j *= 1;
+    }
+    else
+    {
+      j *= 0;
+    }
+    i++;
+  }
+
+  return j;
 }
 
 /*
@@ -349,10 +472,65 @@ void partitionEven(int value)
 
 void partitionOddAndEven(int value)
 {
+  int * arr;
+  arr = malloc(sizeof(int) * value);
+  arr[0] = 0;
+
   printf("partitionOddAndEven %d\n", value);
 
+  partOddEven(value, arr, value);
 }
 
+
+void partOddEven(int value, int * arr, int original)
+{
+  int i;
+
+  if(value >= 1)
+  {
+    for(i = 1; i <= value; i++)
+    {
+      arr[original - value] = i;
+
+      if(sumArray(arr) != original)
+      {
+        if(value > 1 && sumArray(arr) < original)
+        {
+          partOddEven(value - 1, arr, original);
+        }
+      }
+      else if(isOddEven(arr))
+      {
+        printArray(original, arr);
+      }
+
+      arr[original - i] = 0; 
+    }
+  }
+}
+
+
+//Checks whether the numbers are increasing
+int isOddEven(int * arr)
+{
+  int i = 0;
+  int j = 1;
+
+  while(arr[i + 1] != 0)
+  {
+    if(arr[i] % 2 != arr[i + 1] % 2)
+    {
+      j *= 1;
+    }
+    else
+    {
+      j *= 0;
+    }
+    i++;
+  }
+
+  return j;
+}
 /*
  * =================================================================
  * This function prints prime number only partitions of a positive integer value
@@ -373,6 +551,65 @@ void partitionOddAndEven(int value)
 
 void partitionPrime(int value)
 {
+  int * arr;
+  arr = malloc(sizeof(int) * value);
+  arr[0] = 0;
+
   printf("partitionPrime %d\n", value);
 
+  partPrime(value, arr, value);
+}
+
+
+void partPrime(int value, int * arr, int original)
+{
+  int i;
+
+  if(value >= 1)
+  {
+    for(i = 1; i <= value; i++)
+    {
+      arr[original - value] = i;
+
+      if(sumArray(arr) != original)
+      {
+        if(value > 1 && sumArray(arr) < original)
+        {
+          partPrime(value - 1, arr, original);
+        }
+      }
+      else if(isPrime(arr))
+      {
+        printArray(original, arr);
+      }
+
+      arr[original - i] = 0; 
+    }
+  }
+}
+
+int isPrime(int * arr)
+{
+  int j;
+  int i = 0;
+  int k = 1;
+
+  while(arr[i] != 0)
+  {
+    if(arr[i] == 1)
+    {
+      k = 0;
+    }
+
+    for(j = 2; j < arr[i]; j++)
+    {
+      if(arr[i] % j == 0)
+      {
+        k *= 0;
+      }
+    }
+    i++;
+  }
+
+  return k;
 }
