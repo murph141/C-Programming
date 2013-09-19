@@ -17,7 +17,7 @@
 #include <stdlib.h>
 
 void partition(int, int *, int);
-void printArray(int, int*);
+void printArray(int, int *);
 int sumArray(int *);
 
 int sumArray(int * arr)
@@ -38,11 +38,11 @@ void printArray(int value, int * arr)
 {
   int i = 0;
   printf("= ");
-  while(arr[i] != '\0')
+  while(arr[i] != 0)
   {
     printf("%d", arr[i++]);
 
-    if(arr[i] != '\0')
+    if(arr[i] != 0)
     {
       printf(" + ");
     }
@@ -63,9 +63,9 @@ void partition(int value, int * arr, int original)
 
       if(sumArray(arr) != original)
       {
-        if(value > 1)
+        if(value > 1 && sumArray(arr) < original)
         {
-          partition(value - i, arr, original);
+          partition(value - 1, arr, original);
         }
       }
       else
@@ -73,8 +73,8 @@ void partition(int value, int * arr, int original)
         printArray(original, arr);
       }
 
-      arr[original - i] = '\0';
-      printf("%d, %d, %d, %d\n", arr[0], arr[1], arr[2], value);
+      arr[original - i] = 0; 
+      //printf("%d, %d, %d, %d\n", arr[0], arr[1], arr[2], value);
     }
   }
 }
