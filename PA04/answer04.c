@@ -587,7 +587,12 @@ int isPrime(int * arr)
   int i = 0;
   int k = 1;
 
-  while(arr[i] != 0)
+  if(arr[1] == 0)
+  {
+    k = 0;
+  }
+
+  while(arr[i] != 0 && k == 1)
   {
     if(arr[i] == 1)
     {
@@ -598,7 +603,7 @@ int isPrime(int * arr)
     {
       if(arr[i] % j == 0)
       {
-        k *= 0;
+        k = 0;
       }
     }
     i++;
