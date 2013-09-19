@@ -175,6 +175,7 @@ void partDec(int value, int * arr, int ind, int start)
     return;
   }
 
+  //Decrement array since we are starting at the highest possible number and going down
   for(i = start; i > 0; i--)
   {
     arr[ind] = i;
@@ -207,7 +208,7 @@ void partitionOdd(int value)
 
   printf("partitionOdd %d\n", value);
 
-  partOdd(value, arr, 0);
+  partOdd(value, arr, 0); //Intial starting index is 0
 }
 
 
@@ -221,6 +222,7 @@ void partOdd(int value, int * arr, int ind)
     return;
   }
 
+  //Start at 1, an odd number, and increment by 2 to stay on odd numbers
   for(i = 1; i <= value; i += 2)
   {
     arr[ind] = i;
@@ -253,7 +255,7 @@ void partitionEven(int value)
 
   printf("partitionEven %d\n", value);
 
-  partEven(value, arr, 0);
+  partEven(value, arr, 0); //Initial starting index is 0
 }
 
 
@@ -267,6 +269,7 @@ void partEven(int value, int * arr, int ind)
     return;
   }
 
+  //Start at 2, the lowest even number, and increment by 2 to stay on even numbers
   for(i = 2; i <= value; i += 2)
   {
     arr[ind] = i;
@@ -299,7 +302,7 @@ void partitionOddAndEven(int value)
 
   printf("partitionOddAndEven %d\n", value);
 
-  partOaE(value, arr, 0, 1);
+  partOaE(value, arr, 0, 1); //Initial starting index is 0 and the values start on odd numbers
 }
 
 void partOaE(int value, int * arr, int ind, int odd)
@@ -312,22 +315,24 @@ void partOaE(int value, int * arr, int ind, int odd)
     return;
   }
 
+  //Perform the odd loop if we are on an odd number
   if(odd)
   {
     for(i = 1; i <= value; i += 2)
     {
       arr[ind] = i;
 
-      partOaE(value - i, arr, ind + 1, !odd);
+      partOaE(value - i, arr, ind + 1, !odd); //Odd is opposite of what it was before
     }
   }
+  //Otherwise, perform the even loop
   else
   {
     for(i = 2; i <= value; i += 2)
     {
       arr[ind] = i;
 
-      partOaE(value - i, arr, ind + 1, !odd);
+      partOaE(value - i, arr, ind + 1, !odd); //Odd is opposite of what is was before
     }
   }
 }
@@ -356,7 +361,7 @@ void partitionPrime(int value)
 
   printf("partitionPrime %d\n", value);
 
-  partPrime(value, arr, 0);
+  partPrime(value, arr, 0); //Intial starting index is 0
 }
 
 void partPrime(int value, int * arr, int ind)
@@ -371,7 +376,7 @@ void partPrime(int value, int * arr, int ind)
 
   for(i = 2; i <= value; i++)
   {
-    if(isPrime(i))
+    if(isPrime(i)) //Only recall the function and place values if i is prime
     {
       arr[ind] = i;
 
@@ -385,6 +390,7 @@ int isPrime(int i)
   int j = 1;
   int k;
 
+  //Check to make sure i is only divisible by itself
   for(k = 2; k < i; k++)
   {
     if(i % k == 0 && i != k)
