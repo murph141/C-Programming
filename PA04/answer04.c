@@ -16,8 +16,68 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+void partition(int, int *, int);
+void printArray(int, int*);
+int sumArray(int *);
+
+int sumArray(int * arr)
+{
+  int i = 0;
+  int sum = 0;
+
+  while(arr[i] != '\0')
+  {
+    sum += arr[i++];
+  }
+
+  return sum;
+}
 
 
+void printArray(int value, int * arr)
+{
+  int i = 0;
+  printf("= ");
+  while(arr[i] != '\0')
+  {
+    printf("%d", arr[i++]);
+
+    if(arr[i] != '\0')
+    {
+      printf(" + ");
+    }
+  }
+  printf("\n");
+}
+
+
+void partition(int value, int * arr, int original)
+{
+  int i;
+
+  if(value >= 1)
+  {
+    for(i = 1; i <= value; i++)
+    {
+      arr[original - value] = i;
+
+      if(sumArray(arr) != original)
+      {
+        if(value > 1)
+        {
+          partition(value - i, arr, original);
+        }
+      }
+      else
+      {
+        printArray(original, arr);
+      }
+
+      arr[original - i] = '\0';
+      printf("%d, %d, %d, %d\n", arr[0], arr[1], arr[2], value);
+    }
+  }
+}
 /*
  * =================================================================
  * This function prints all partitions of a positive integer value
@@ -33,8 +93,13 @@
 
 void partitionAll(int value)
 {
+  int * arr;
+  arr = malloc(sizeof(int) * value);
+  arr[0] = 0;
+
   printf("partitionAll %d\n", value);
-  
+
+  partition(value, arr, value);
 }
 /*
  * =================================================================
@@ -85,7 +150,7 @@ void partitionIncreasing(int value)
 void partitionDecreasing(int value)
 {
   printf("partitionDecreasing %d\n", value);
-  
+
 
 }
 
@@ -110,7 +175,7 @@ void partitionDecreasing(int value)
 void partitionOdd(int value)
 {
   printf("partitionOdd %d\n", value);
-  
+
 }
 
 /*
@@ -160,7 +225,7 @@ void partitionEven(int value)
 void partitionOddAndEven(int value)
 {
   printf("partitionOddAndEven %d\n", value);
-  
+
 }
 
 /*
