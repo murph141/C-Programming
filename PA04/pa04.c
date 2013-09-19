@@ -8,8 +8,6 @@
 int main(int argc, char * * argv)
 {
 
-  partitionPrime(6);
-
   printf("input file format:\n<method> <value to partition>\n\n");
   printf("methods:\n1. All\n2. Increasing\n3. Decreasing\n4. Odd\n5. Even\n6. OddAndEven\n7. Prime\n\n");
 

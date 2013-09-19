@@ -117,9 +117,7 @@ void partition(int value, int * arr, int original)
 
 void partitionAll(int value)
 {
-  int * arr;
-  arr = malloc(sizeof(int) * value);
-  arr[0] = 0;
+  int arr[MAXLENGTH] = {0};
 
   printf("partitionAll %d\n", value);
 
@@ -147,9 +145,7 @@ void partitionAll(int value)
 
 void partitionIncreasing(int value)
 {
-  int * arr;
-  arr = malloc(sizeof(int) * value);
-  arr[0] = 0;
+  int arr[MAXLENGTH] = {0};
 
   printf("partitionIncreasing %d\n", value);
 
@@ -230,9 +226,7 @@ int isIncreasing(int * arr)
 
 void partitionDecreasing(int value)
 {
-  int * arr;
-  arr = malloc(sizeof(int) * value);
-  arr[0] = 0;
+  int arr[MAXLENGTH] = {0};
 
   printf("partitionDecreasing %d\n", value);
 
@@ -311,9 +305,7 @@ int isDecreasing(int * arr)
 
 void partitionOdd(int value)
 {
-  int * arr;
-  arr = malloc(sizeof(int) * value);
-  arr[0] = 0;
+  int arr[MAXLENGTH] = {0};
 
   printf("partitionOdd %d\n", value);
 
@@ -391,9 +383,7 @@ int isOdd(int * arr)
 
 void partitionEven(int value)
 {
-  int * arr;
-  arr = malloc(sizeof(int) * value);
-  arr[0] = 0;
+  int arr[MAXLENGTH] = {0};
 
   printf("partitionEven %d\n", value);
 
@@ -472,9 +462,7 @@ int isEven(int * arr)
 
 void partitionOddAndEven(int value)
 {
-  int * arr;
-  arr = malloc(sizeof(int) * value);
-  arr[0] = 0;
+  int arr[MAXLENGTH] = {0};
 
   printf("partitionOddAndEven %d\n", value);
 
@@ -516,17 +504,24 @@ int isOddEven(int * arr)
   int i = 0;
   int j = 1;
 
-  while(arr[i + 1] != 0)
+  if(arr[0] % 2)
   {
-    if(arr[i] % 2 != arr[i + 1] % 2)
+    while(arr[i + 1] != 0)
     {
-      j *= 1;
+      if(arr[i] % 2 != arr[i + 1] % 2)
+      {
+        j *= 1;
+      }
+      else
+      {
+        j *= 0;
+      }
+      i++;
     }
-    else
-    {
-      j *= 0;
-    }
-    i++;
+  }
+  else
+  {
+    j = 0;
   }
 
   return j;
@@ -551,9 +546,7 @@ int isOddEven(int * arr)
 
 void partitionPrime(int value)
 {
-  int * arr;
-  arr = malloc(sizeof(int) * value);
-  arr[0] = 0;
+  int arr[MAXLENGTH] = {0};
 
   printf("partitionPrime %d\n", value);
 
