@@ -81,6 +81,7 @@ void partition(int value, int * arr, int ind)
     return;
   }
 
+  //Loop through all values starting after 0
   for(i = 1; i <= value; i++)
   {
     arr[ind] = i;
