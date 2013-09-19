@@ -12,93 +12,39 @@
  * needed is specified by MAXLENGTH in pa04.h.
  */
 
-//----------------------------
 #include "pa04.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 void partition(int, int *, int);
-
-void partitionInc(int, int *, int);
-int isIncreasing(int *);
-
-void partitionDec(int, int *, int);
-int isDecreasing(int *);
-
-void partOdd(int, int*, int);
-int isOdd(int *);
-
-void partEven(int, int*, int);
-int isEven(int *);
-
-void partOddEven(int, int*, int);
-int isOddEven(int *);
-
+void partInc(int, int *, int, int);
+void partDec(int, int *, int, int);
+void partOdd(int, int *, int);
+void partEven(int, int *, int);
+void partOaE(int, int *, int, int);
 void partPrime(int, int *, int);
-int isPrime(int *);
+void printArray(int *, int);
+int isPrime(int);
 
-void printArray(int, int *);
-int sumArray(int *);
-//-----------------------------
-
-
-int sumArray(int * arr)
+//This function is used to print the array values
+void printArray(int * arr, int ind)
 {
   int i = 0;
-  int sum = 0;
-
-  while(arr[i] != '\0')
-  {
-    sum += arr[i++];
-  }
-
-  return sum;
-}
-
-
-void printArray(int value, int * arr)
-{
-  int i = 0;
-  printf("= ");
-  while(arr[i] != 0)
+  printf("= "); //Formatting
+  while(ind)
   {
     printf("%d", arr[i++]);
 
-    if(arr[i] != 0)
+    ind--;
+
+    if(ind)
     {
       printf(" + ");
     }
   }
-  printf("\n");
-}
 
-
-//Regular Partitioning
-void partition(int value, int * arr, int original)
-{
-  int i;
-
-  if(value >= 1)
-  {
-    for(i = 1; i <= value; i++)
-    {
-      arr[original - value] = i;
-
-      if(sumArray(arr) != original)
-      {
-        if(value > 1 && sumArray(arr) < original)
-        {
-          partition(value - 1, arr, original);
-        }
-      }
-      else
-      {
-        printArray(original, arr);
-      }
-
-      arr[original - i] = 0; 
-    }
-  }
+  printf("\n"); //Formatting
 }
 
 
@@ -117,11 +63,30 @@ void partition(int value, int * arr, int original)
 
 void partitionAll(int value)
 {
-  int arr[MAXLENGTH] = {0};
+  int arr[MAXLENGTH] = {0}; //Make array values all 0
 
   printf("partitionAll %d\n", value);
 
-  partition(value, arr, value);
+  partition(value, arr, 0); //Initial index is 0
+}
+
+
+void partition(int value, int * arr, int ind)
+{
+  int i;
+
+  if(value == 0)
+  {
+    printArray(arr, ind);
+    return;
+  }
+
+  for(i = 1; i <= value; i++)
+  {
+    arr[ind] = i;
+
+    partition(value - i, arr, ind + 1);
+  }
 }
 /*
  * =================================================================
@@ -145,65 +110,31 @@ void partitionAll(int value)
 
 void partitionIncreasing(int value)
 {
-  int arr[MAXLENGTH] = {0};
+  int arr[MAXLENGTH] = {0}; //Make array values all 0
 
   printf("partitionIncreasing %d\n", value);
 
-  partitionInc(value, arr, value);
+  partInc(value, arr, 0, 1); //Initial index is 0 and initial starting point is 1
 }
 
-
-
-void partitionInc(int value, int * arr, int original)
+void partInc(int value, int * arr, int ind, int start)
 {
   int i;
 
-  if(value >= 1)
+  if(value == 0)
   {
-    for(i = 1; i <= value; i++)
-    {
-      arr[original - value] = i;
-
-      if(sumArray(arr) != original)
-      {
-        if(value > 1 && sumArray(arr) < original)
-        {
-          partitionInc(value - 1, arr, original);
-        }
-      }
-      else if(isIncreasing(arr))
-      {
-        printArray(original, arr);
-      }
-
-      arr[original - i] = 0; 
-    }
-  }
-}
-
-
-//Checks whether the numbers are increasing
-int isIncreasing(int * arr)
-{
-  int i = 0;
-  int j = 1;
-
-  while(arr[i + 1] != 0)
-  {
-    if(arr[i] < arr[i + 1])
-    {
-      j *= 1;
-    }
-    else
-    {
-      j *= 0;
-    }
-    i++;
+    printArray(arr, ind);
+    return;
   }
 
-  return j;
-}
+  //Start at 1 initially since it is the lowest number
+  for(i = start; i <= value; i++)
+  {
+    arr[ind] = i;
 
+    partInc(value - i, arr, ind + 1, i + 1);
+  }
+}
 /*
  * =================================================================
  * This function prints the partitions that use Decreasing values.
@@ -226,64 +157,31 @@ int isIncreasing(int * arr)
 
 void partitionDecreasing(int value)
 {
-  int arr[MAXLENGTH] = {0};
+  int arr[MAXLENGTH] = {0}; //Make array values all 0
 
   printf("partitionDecreasing %d\n", value);
 
-  partitionDec(value, arr, value);
+  partDec(value, arr, 0, value); //Initial index is 0 and initial starting point is the value being input
 }
 
 
-void partitionDec(int value, int * arr, int original)
+void partDec(int value, int * arr, int ind, int start)
 {
   int i;
 
-  if(value >= 1)
+  if(value == 0)
   {
-    for(i = 1; i <= value; i++)
-    {
-      arr[original - value] = i;
-
-      if(sumArray(arr) != original)
-      {
-        if(value > 1 && sumArray(arr) < original)
-        {
-          partitionDec(value - 1, arr, original);
-        }
-      }
-      else if(isDecreasing(arr))
-      {
-        printArray(original, arr);
-      }
-
-      arr[original - i] = 0; 
-    }
-  }
-}
-
-
-//Checks whether the numbers are increasing
-int isDecreasing(int * arr)
-{
-  int i = 0;
-  int j = 1;
-
-  while(arr[i + 1] != 0)
-  {
-    if(arr[i] > arr[i + 1])
-    {
-      j *= 1;
-    }
-    else
-    {
-      j *= 0;
-    }
-    i++;
+    printArray(arr, ind);
+    return;
   }
 
-  return j;
-}
+  for(i = start; i > 0; i--)
+  {
+    arr[ind] = i;
 
+    partDec(value - i, arr, ind + 1, i - 1);
+  }
+}
 
 /*
  * =================================================================
@@ -305,62 +203,30 @@ int isDecreasing(int * arr)
 
 void partitionOdd(int value)
 {
-  int arr[MAXLENGTH] = {0};
+  int arr[MAXLENGTH] = {0}; //Make array values all 0
 
   printf("partitionOdd %d\n", value);
 
-  partOdd(value, arr, value);
+  partOdd(value, arr, 0);
 }
 
 
-void partOdd(int value, int * arr, int original)
+void partOdd(int value, int * arr, int ind)
 {
   int i;
 
-  if(value >= 1)
+  if(value == 0)
   {
-    for(i = 1; i <= value; i++)
-    {
-      arr[original - value] = i;
-
-      if(sumArray(arr) != original)
-      {
-        if(value > 1 && sumArray(arr) < original)
-        {
-          partOdd(value - 1, arr, original);
-        }
-      }
-      else if(isOdd(arr))
-      {
-        printArray(original, arr);
-      }
-
-      arr[original - i] = 0; 
-    }
-  }
-}
-
-
-//Checks whether the numbers are increasing
-int isOdd(int * arr)
-{
-  int i = 0;
-  int j = 1;
-
-  while(arr[i] != 0)
-  {
-    if(arr[i] % 2)
-    {
-      j *= 1;
-    }
-    else
-    {
-      j *= 0;
-    }
-    i++;
+    printArray(arr, ind);
+    return;
   }
 
-  return j;
+  for(i = 1; i <= value; i += 2)
+  {
+    arr[ind] = i;
+
+    partOdd(value - i, arr, ind + 1);
+  }
 }
 /*
  * =================================================================
@@ -383,64 +249,31 @@ int isOdd(int * arr)
 
 void partitionEven(int value)
 {
-  int arr[MAXLENGTH] = {0};
+  int arr[MAXLENGTH] = {0}; //Make array values all 0
 
   printf("partitionEven %d\n", value);
 
-  partEven(value, arr, value);
+  partEven(value, arr, 0);
 }
 
 
-void partEven(int value, int * arr, int original)
+void partEven(int value, int * arr, int ind)
 {
   int i;
 
-  if(value >= 1)
+  if(value == 0)
   {
-    for(i = 1; i <= value; i++)
-    {
-      arr[original - value] = i;
-
-      if(sumArray(arr) != original)
-      {
-        if(value > 1 && sumArray(arr) < original)
-        {
-          partEven(value - 1, arr, original);
-        }
-      }
-      else if(isEven(arr))
-      {
-        printArray(original, arr);
-      }
-
-      arr[original - i] = 0; 
-    }
-  }
-}
-
-
-//Checks whether the numbers are increasing
-int isEven(int * arr)
-{
-  int i = 0;
-  int j = 1;
-
-  while(arr[i] != 0)
-  {
-    if(arr[i] % 2 == 0)
-    {
-      j *= 1;
-    }
-    else
-    {
-      j *= 0;
-    }
-    i++;
+    printArray(arr, ind);
+    return;
   }
 
-  return j;
-}
+  for(i = 2; i <= value; i += 2)
+  {
+    arr[ind] = i;
 
+    partEven(value - i, arr, ind + 1);
+  }
+}
 /*
  * =================================================================
  * This function prints alternate ood and even number partitions of a positive integer value. Each partition starts from and odd number, even number, ood number again, even number again...etc.
@@ -462,70 +295,43 @@ int isEven(int * arr)
 
 void partitionOddAndEven(int value)
 {
-  int arr[MAXLENGTH] = {0};
+  int arr[MAXLENGTH] = {0}; //Make array values all 0
 
   printf("partitionOddAndEven %d\n", value);
 
-  partOddEven(value, arr, value);
+  partOaE(value, arr, 0, 1);
 }
 
-
-void partOddEven(int value, int * arr, int original)
+void partOaE(int value, int * arr, int ind, int odd)
 {
   int i;
 
-  if(value >= 1)
+  if(value == 0)
   {
-    for(i = 1; i <= value; i++)
-    {
-      arr[original - value] = i;
-
-      if(sumArray(arr) != original)
-      {
-        if(value > 1 && sumArray(arr) < original)
-        {
-          partOddEven(value - 1, arr, original);
-        }
-      }
-      else if(isOddEven(arr))
-      {
-        printArray(original, arr);
-      }
-
-      arr[original - i] = 0; 
-    }
+    printArray(arr, ind);
+    return;
   }
-}
 
-
-//Checks whether the numbers are increasing
-int isOddEven(int * arr)
-{
-  int i = 0;
-  int j = 1;
-
-  if(arr[0] % 2)
+  if(odd)
   {
-    while(arr[i + 1] != 0)
+    for(i = 1; i <= value; i += 2)
     {
-      if(arr[i] % 2 != arr[i + 1] % 2)
-      {
-        j *= 1;
-      }
-      else
-      {
-        j *= 0;
-      }
-      i++;
+      arr[ind] = i;
+
+      partOaE(value - i, arr, ind + 1, !odd);
     }
   }
   else
   {
-    j = 0;
-  }
+    for(i = 2; i <= value; i += 2)
+    {
+      arr[ind] = i;
 
-  return j;
+      partOaE(value - i, arr, ind + 1, !odd);
+    }
+  }
 }
+
 /*
  * =================================================================
  * This function prints prime number only partitions of a positive integer value
@@ -546,68 +352,46 @@ int isOddEven(int * arr)
 
 void partitionPrime(int value)
 {
-  int arr[MAXLENGTH] = {0};
+  int arr[MAXLENGTH] = {0}; //Make array values all 0
 
   printf("partitionPrime %d\n", value);
 
-  partPrime(value, arr, value);
+  partPrime(value, arr, 0);
 }
 
-
-void partPrime(int value, int * arr, int original)
+void partPrime(int value, int * arr, int ind)
 {
   int i;
 
-  if(value >= 1)
+  if(value == 0)
   {
-    for(i = 1; i <= value; i++)
+    printArray(arr, ind);
+    return;
+  }
+
+  for(i = 2; i <= value; i++)
+  {
+    if(isPrime(i))
     {
-      arr[original - value] = i;
+      arr[ind] = i;
 
-      if(sumArray(arr) != original)
-      {
-        if(value > 1 && sumArray(arr) < original)
-        {
-          partPrime(value - 1, arr, original);
-        }
-      }
-      else if(isPrime(arr))
-      {
-        printArray(original, arr);
-      }
-
-      arr[original - i] = 0; 
+      partPrime(value - i, arr, ind + 1);
     }
   }
 }
 
-int isPrime(int * arr)
+int isPrime(int i)
 {
-  int j;
-  int i = 0;
-  int k = 1;
+  int j = 1;
+  int k;
 
-  if(arr[1] == 0)
+  for(k = 2; k < i; k++)
   {
-    k = 0;
+    if(i % k == 0 && i != k)
+    {
+      j = 0;
+    }
   }
 
-  while(arr[i] != 0 && k == 1)
-  {
-    if(arr[i] == 1)
-    {
-      k = 0;
-    }
-
-    for(j = 2; j < arr[i]; j++)
-    {
-      if(arr[i] % j == 0)
-      {
-        k = 0;
-      }
-    }
-    i++;
-  }
-
-  return k;
+  return j;
 }
