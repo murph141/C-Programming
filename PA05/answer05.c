@@ -4,6 +4,8 @@
 #include "pa05.h"
 #define MAXIMUM_LENGTH 80
 
+//Declare the two comparison functions
+
 int compstr(const void *, const void *);
 int compint(const void *, const void *);
 
@@ -67,33 +69,33 @@ int compint(const void *, const void *);
 
 int * readInteger(char * filename, int * numInteger)
 {
-  int * arr;
-  int ind = 0;
-  FILE * fptr = fopen(filename, "r");
-  int buffer;
+  int * arr; //Array that will store the values
+  int ind = 0; //Index value
+  FILE * fptr = fopen(filename, "r"); //Open the file for reading
+  int buffer; //Used to temporarily store the values of fscanf
 
   if(fptr == NULL)
   {
-    return NULL;
+    return NULL; //Return null if the file has problems being read/opened
   }
 
   while(fscanf(fptr, "%d", &buffer) == 1)
   {
-    (*numInteger)++;
+    (*numInteger)++; //Increment numInteger each time a line is read in
   }
 
   fseek(fptr, 0 , SEEK_SET);
 
-  arr = malloc(sizeof(int) * (*numInteger));
+  arr = malloc(sizeof(int) * (*numInteger)); //Allocate based on the size of the file
 
   while(fscanf(fptr, "%d", &arr[ind]) == 1)
   {
     ind++;
   }
 
-  fclose(fptr);
+  fclose(fptr); //Close the file
 
-  return arr;
+  return arr; //Return the array
 }
 
 /* ----------------------------------------------- */
@@ -164,35 +166,36 @@ int * readInteger(char * filename, int * numInteger)
 
 char * * readString(char * filename, int * numString)
 {
-  char buffer[MAXIMUM_LENGTH];
-  int ind = 0;
-  char * * strArr;
-  FILE * fptr = fopen(filename, "r");
+  char buffer[MAXIMUM_LENGTH]; //Make an array that will hold the values of the string being read in
+  int ind = 0; //Index value
+  char * * strArr; //The array that will be returned at the end of the function
+  FILE * fptr = fopen(filename, "r"); //Open the file for reading
 
   if(fptr == NULL)
   {
-    return NULL;
+    return NULL; //If the file can't be read/opened, return null
   }
 
   while(fgets(buffer, MAXIMUM_LENGTH, fptr) != NULL)
   {
-    (*numString)++;
+    (*numString)++; //Increment numString for each time a line is read in
   }
 
-  fseek(fptr, 0, SEEK_SET);
+  fseek(fptr, 0, SEEK_SET); //Reset file to the beginning
 
-  strArr = malloc(sizeof(char *) * (*numString));
+  strArr = malloc(sizeof(char *) * (*numString)); //Allocate space for the first dimension of the array
 
   while(fgets(buffer, MAXIMUM_LENGTH, fptr) != NULL)
   {
+    //Allocate space for the array in the second dimension based on the number of characters that are read on each line
     strArr[ind] = malloc(sizeof(char) * (strlen(buffer) + 1));
-    strcpy(strArr[ind], buffer);
+    strcpy(strArr[ind], buffer); //Copy the buffer that was read in to the string array
     ind++;
   }
 
-  fclose(fptr);
+  fclose(fptr); //Close the file
 
-  return strArr;
+  return strArr; //Return the array of the array of characters
 }
 
 /* ----------------------------------------------- */
@@ -201,11 +204,11 @@ char * * readString(char * filename, int * numString)
  */
 void printInteger(int * arrInteger, int numInteger)
 {
-  int ind;
+  int ind; //Index value
 
   for(ind = 0; ind < numInteger; ind++)
   {
-    printf("%d\n", arrInteger[ind]);
+    printf("%d\n", arrInteger[ind]); //Print an integer on a separate line numInteger times
   }
 }
 
@@ -217,11 +220,11 @@ void printInteger(int * arrInteger, int numInteger)
  */
 void printString(char * * arrString, int numString)
 {
-  int ind;
+  int ind; //Index value
 
   for(ind = 0; ind < numString; ind++)
   {
-    printf("%s\n", arrString[ind]);
+    printf("%s\n", arrString[ind]); //Print a string on a separate line numString times
   }
 }
 
@@ -231,7 +234,7 @@ void printString(char * * arrString, int numString)
  */
 void freeInteger(int * arrInteger, int numInteger)
 {
-  free(arrInteger);
+  free(arrInteger); //Free the array of integers
 }
 
 /* ----------------------------------------------- */
@@ -242,14 +245,14 @@ void freeInteger(int * arrInteger, int numInteger)
  */
 void freeString(char * * arrString, int numString)
 {
-  int ind;
+  int ind; //Index value
 
   for(ind = 0; ind < numString; ind++)
   {
-    free(arrString[ind]);
+    free(arrString[ind]); //Free the individual indicies of the string array
   }
 
-  free(arrString);
+  free(arrString); //Free the original the array, the array that contains the number of lines that are read in
 }
 
 /* ----------------------------------------------- */
@@ -272,25 +275,25 @@ void freeString(char * * arrString, int numString)
 
 int saveInteger(char * filename, int * arrInteger, int numInteger)
 {
-  FILE * fptr = fopen(filename, "w");
-  int ind;
+  FILE * fptr = fopen(filename, "w"); //Open the file for writing
+  int ind; //Index value
 
   if(fptr == NULL)
   {
-    return 0;
+    return 0; //If the file can't be opened, return a 0 to show an error occured
   }
 
   for(ind = 0; ind < numInteger; ind++)
   {
     if(fprintf(fptr, "%d\n", arrInteger[ind]) < 0)
     {
-      fclose(fptr);
-      return 0;
+      fclose(fptr); //Close the file
+      return 0; //Return an error value
     }
   }
 
-  fclose(fptr);
-  return 1;
+  fclose(fptr); //Close the file
+  return 1; //Return 1 to signify success
 }
 
 /* ----------------------------------------------- */
@@ -313,25 +316,25 @@ int saveInteger(char * filename, int * arrInteger, int numInteger)
 
 int saveString(char * filename, char * * arrString, int numString)
 {
-  FILE * fptr = fopen(filename, "w");
-  int ind;
+  FILE * fptr = fopen(filename, "w"); //Open the file for writing
+  int ind; //Index value
 
   if(fptr == NULL)
   {
-    return 0;
+    return 0; //If the file can't be opened or written to, return 0 to signify an error
   }
 
   for(ind = 0; ind < numString; ind++)
   {
     if(fprintf(fptr, "%s", arrString[ind])  < 0)
     {
-      fclose(fptr);
-      return 0;
+      fclose(fptr); //Close the file
+      return 0; //Return a 0 to signify an error
     }
   }
 
-  fclose(fptr);
-  return 1;
+  fclose(fptr); //Close the file
+  return 1; //Return a 1 to signify success
 }
 
 /* ----------------------------------------------- */
@@ -344,7 +347,7 @@ int saveString(char * filename, char * * arrString, int numString)
 
 void sortInteger(int * arrInteger, int numInteger)
 {
-  qsort(arrInteger, numInteger, sizeof(int), compint);
+  qsort(arrInteger, numInteger, sizeof(int), compint); //Call the qsort function with the function to compare integers
 }
 
 
@@ -361,32 +364,32 @@ void sortInteger(int * arrInteger, int numInteger)
 
 void sortString(char * * arrString, int numString)
 {
-  qsort(arrString, numString, sizeof(char *), compstr);
+  qsort(arrString, numString, sizeof(char *), compstr); //Call the qsort function with the function to compare strings (chars)
 }
 
 
 int compstr(const void * s1, const void * s2)
 {
-  char * str1 = *(char **) s1;
-  char * str2 = *(char **) s2;
+  char * str1 = *(char **) s1; //Cast type the array of array of chars and pull the value from it
+  char * str2 = *(char **) s2; //Cast type the array of array of chars and pull the value from it
 
-  return strcmp(str1, str2);
+  return strcmp(str1, str2); //Return the value of the string comparison function from string.h
 }
 
 
 int compint(const void * i1, const void * i2)
 {
-  int int1 = * (int *) i1;
-  int int2 = * (int *) i2;
+  int int1 = * (int *) i1; //Cast type the integer pointer and take the value from it
+  int int2 = * (int *) i2; //Cast type the integer pointer and take the value from it
 
   if(int1 < int2)
   {
-    return -1;
+    return -1; //Return a negative number if the first integer is less than the second integer
   }
   if(int1 > int2)
   {
-    return 1;
+    return 1; //Return a positive number if the first integer is greater than the second integer
   }
 
-  return 0;
+  return 0; //Return a zero if the two numbers are equal
 }

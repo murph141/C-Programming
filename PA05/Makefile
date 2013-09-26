@@ -111,8 +111,5 @@ test11:	 pa05 | environment
 
 
 test12:	 pa05 | environment
-	@diff -w outputs/intoutput12 expected/intexpected12
 	@$(VALGRIND) --log-file=outputs/intmemoutput12 ./pa05 i inputs/intinput12 outputs/intoutput12
-
-
-
+	@diff -w outputs/intoutput12 expected/intexpected12
