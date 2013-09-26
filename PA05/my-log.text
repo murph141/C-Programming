@@ -1,0 +1,354 @@
+commit bb29f7da66cacfa134263db1ced35805820a7d3c
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Thu Sep 26 19:21:47 2013 -0400
+
+    Finished PA05
+
+commit a02cb0e27d0be65ebe5275e95a147f9fc88a4ec0
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Thu Sep 26 14:18:17 2013 -0400
+
+    Worked on PA05
+
+commit 5609d401af0aa98d8dfc5edfb6eacc52f9d6a90a
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Thu Sep 26 13:56:39 2013 -0400
+
+    Added PA05
+
+commit a40fa70baafec5c273a2121bcbaabc9a253519cc
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Thu Sep 19 16:46:55 2013 -0400
+
+    Added Git Log
+
+commit dda77080cf27ded30e3272e21ea518d01982f3bb
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Thu Sep 19 16:43:27 2013 -0400
+
+    Finished PA04
+
+commit 5d646ace677509b2808a31cc48c20674a9018f4b
+Author: Eric <eric@debian>
+Date:   Thu Sep 19 14:10:47 2013 -0500
+
+    Finished commenting
+
+commit 3cb158e66ec724b21eb25a01aaf8dd2e440c98ff
+Author: Eric <eric@debian>
+Date:   Thu Sep 19 13:55:13 2013 -0500
+
+    Finished PA04, just adding comments now
+
+commit ab1f841ed29071da15343ddb4b9645ad2cc2393f
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Wed Sep 18 23:36:32 2013 -0400
+
+    Finished PA04
+
+commit 4045df9fd7a87ebce1f8305b88e5b531b42b8196
+Author: Eric <eric@debian>
+Date:   Wed Sep 18 23:05:55 2013 -0500
+
+    PA04 almost finished
+
+commit d388299c3ac40312987d2362e78517cce33f6f1f
+Author: Eric <eric@debian>
+Date:   Wed Sep 18 22:32:27 2013 -0500
+
+    Completed Odd Function in PA04
+
+commit 345993916ecdb2d37cec9952eb7d437f9b9ec94e
+Author: Eric <eric@debian>
+Date:   Wed Sep 18 21:18:49 2013 -0500
+
+    Finished PA04 Decreasing Function
+
+commit cd5f009fd977b3f4675026d2693d6636a6cbd67d
+Author: Eric <eric@debian>
+Date:   Wed Sep 18 20:40:31 2013 -0500
+
+    Finished the first function
+
+commit fd37abfa115282cf06877e2a4333835d9ad6b046
+Author: Eric <eric@debian>
+Date:   Wed Sep 18 20:21:39 2013 -0500
+
+    Worked on PA04
+
+commit ac51dd0559ee3819643e65e29b138fb7d21e1631
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Wed Sep 18 18:37:12 2013 -0400
+
+    Added PA05
+
+commit 374682d66ceb596bfeb22b674e783a3401d2f8fc
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Sun Sep 15 15:50:58 2013 -0400
+
+    Started PA04
+
+commit e0fd926443b97695c87e3652568986584c3d8cf3
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Sun Sep 15 15:38:25 2013 -0400
+
+    Added PA04
+
+commit 443336f5f4ce71bd68bfd008d033dbe5bb8fa4a7
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Thu Sep 12 21:05:01 2013 -0400
+
+    Added zip file
+
+commit 0e24ccfd8dda1d78f23b7ae40b7e159c8ac62861
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Thu Sep 12 21:01:59 2013 -0400
+
+    Fixed error check
+
+commit ad7820f3615d264512b3a5507d64c3ffa0db7901
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Tue Sep 10 21:23:28 2013 -0400
+
+    Finishing Touches to PA03 Added
+
+commit 390dd3b68f6ae43bfd56b379fa504e824367a6a0
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Tue Sep 10 20:59:13 2013 -0400
+
+    Finished PA03, Internet Very Slow
+
+commit 79c565aba30a47b52c748065393665476d122bbf
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Tue Sep 10 20:04:01 2013 -0400
+
+    Fixed executable files being synced
+
+commit a225f17b591b95804466677d26f290b963437665
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Tue Sep 10 18:55:14 2013 -0400
+
+    Started working on Binary Search, Man these machines are terrible
+
+commit 06787ef6046f7120f80d18164c035ca802a06177
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Mon Sep 9 15:09:34 2013 -0400
+
+    Fixed a small error in numberOfIntegers function.
+
+commit 93d54fb3d66e6ef14a15e8b28c068b090475b8d2
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Mon Sep 9 14:48:24 2013 -0400
+
+    Finished functions 1 and 2
+
+commit a0558b7ba70a00a1b6c0628a55d4f4f4273c47db
+Author: Eric <eric@debian>
+Date:   Sun Sep 8 16:09:12 2013 -0500
+
+    Removed backup file
+
+commit 6140ca2b8ba650b066bac281030b565805d20149
+Author: Eric <eric@debian>
+Date:   Sun Sep 8 16:07:45 2013 -0500
+
+    Finished function 1 of PA03
+
+commit 73d17b05b7e03f1ac0db3a81f17f028c2811c594
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Sat Sep 7 18:33:51 2013 -0400
+
+    Added PA03
+
+commit b04b75983eb7901d266a31dea9e41eb337f4ee23
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Tue Sep 3 13:44:17 2013 -0400
+
+    Finished problem PA02
+
+commit 8fd93b525baa2951ae3f2452c7720717e5fa0259
+Author: Eric <eric@debian>
+Date:   Mon Sep 2 18:30:43 2013 -0500
+
+    Tried to finish
+
+commit 7fa49a21936dff32179ded9aa0a3c2f0114a2e01
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Mon Sep 2 18:12:02 2013 -0400
+
+    Attempted to work on code
+
+commit 7243d8aac06ad4f20f47286170b9655e855f6fd3
+Author: Eric <eric@debian>
+Date:   Sun Sep 1 19:18:57 2013 -0500
+
+    Removed test.test
+
+commit 6bf5125e6727d9615471c78793017d81029b042d
+Author: Eric <eric@debian>
+Date:   Sun Sep 1 19:02:42 2013 -0500
+
+    Small change
+
+commit f15ef8513b845b655a3f86b96a49ecec92f547f8
+Author: Eric <eric@debian>
+Date:   Sun Sep 1 19:00:13 2013 -0500
+
+    Tried to solve the problem
+
+commit 66d2ecc07d696cfb57cf55fb74c091be215c9111
+Author: Eric <eric@debian>
+Date:   Sun Sep 1 16:21:48 2013 -0500
+
+    Tried to finish
+
+commit 10d0c25d765868924e76285bfc86ca7f236a9bf0
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Sat Aug 31 18:54:38 2013 -0400
+
+    Added some code
+
+commit c8a6e2815ab279106f6d1d02e2faa2eab48e780d
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Sat Aug 31 18:19:36 2013 -0400
+
+    Finshed my_strstr
+
+commit cce25ccd48a95fb027ee9b0b5583220091545b0a
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Sat Aug 31 16:46:41 2013 -0400
+
+    Removed excess files
+
+commit d134b27f427189677f91b1ba2db8bba8b07a7f10
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Sat Aug 31 16:45:19 2013 -0400
+
+    Removed excess files
+
+commit 920a4d090a75ab2a25f945d9769bcb923d3ed37a
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Tue Aug 27 21:28:23 2013 -0400
+
+    Fixed small problem
+
+commit 80ca705f4bf55da8fdc748b0abb8a3104cbe5c89
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Tue Aug 27 21:12:59 2013 -0400
+
+    Synced up files
+
+commit 4568ac6418424acc6dde3ad690a2ea9c5c194aa1
+Merge: 5443392 b235fa0
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Tue Aug 27 21:06:57 2013 -0400
+
+    Merge branch 'master' of github.com:murph141/ECE264
+
+commit 54433925c8bd3955069d95878b174bdd68d97062
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Tue Aug 27 20:36:13 2013 -0400
+
+    Updated with assignment files
+
+commit b235fa0019c2eba7608c6ed5af1bca0c2291c5b3
+Author: Eric <eric@debian>
+Date:   Mon Aug 26 15:43:26 2013 -0500
+
+    Fixed test.sh
+
+commit 7d46cf61e405a3655b5e32d3b384397fae177586
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Sun Aug 25 15:11:36 2013 -0400
+
+    End of Sunday
+
+commit 9df463416b7956ceac6cbb13fd3014297846c8e8
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Sun Aug 25 13:51:50 2013 -0400
+
+    Started working on the problem
+
+commit a78bbc9039de0bf3d534bb443d067560573bb4d7
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Sun Aug 25 12:19:40 2013 -0400
+
+    Added Problem 2
+
+commit 56ca893421fdbd3fb53703894f9683f928c1aeea
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Fri Aug 23 08:04:32 2013 -0400
+
+    Fixed Makefile
+
+commit bde84fad375df28af27250b9fbcb9cc92fbb2571
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Thu Aug 22 19:21:58 2013 -0400
+
+    Removed test directory
+
+commit b57108bcd38246de37ae57e0af25ae7777b19b36
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Wed Aug 21 11:24:15 2013 -0400
+
+    Removed run.sh
+
+commit 1fd33b5e92f43c6b3b4c089e817da83a072fd782
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Wed Aug 21 11:22:33 2013 -0400
+
+    Discovered make test
+
+commit ed1d1f68a8e7f6237d136720d5c2b671229dd99f
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Wed Aug 21 00:22:04 2013 -0400
+
+    Removed test
+
+commit 96da8c31a1feb6120b3a04750c281295bb783886
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Wed Aug 21 00:21:26 2013 -0400
+
+    Added test
+
+commit f38741ff6205c06bc74016ad5e284ab8588e9a15
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Wed Aug 21 00:18:38 2013 -0400
+
+    Removed test
+
+commit 8046ac37ae660ebe956fc2f1bcdd0fbc8d473366
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Wed Aug 21 00:17:55 2013 -0400
+
+    Added test
+
+commit 5f8533e4aef04df4ffac77d5a209612c4793891f
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Tue Aug 20 23:46:04 2013 -0400
+
+    Fixed bash scripts and deleted unnecessary files.
+
+commit 6557b131da35292eb4270e3b26defe1f7869f657
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Tue Aug 20 18:53:47 2013 -0400
+
+    Tried a bash script to make things more autonomous, it failed.
+
+commit 246a211ed754729ba0c616ead3934ea341cade05
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Tue Aug 20 18:12:45 2013 -0400
+
+    Started working on the problem (Probably finished)
+
+commit 372f37efc707953fec582a958a47f29126126710
+Author: Eric Michael Murphy <murph141@ecelinux22.ecn.purdue.edu>
+Date:   Tue Aug 20 13:06:56 2013 -0400
+
+    Added problems
+
+commit 8ce3c4c3c2c072889da6f9585e13ec71d3f8ee0d
+Author: murph141 <murph141@users.noreply.github.com>
+Date:   Tue Aug 20 09:57:14 2013 -0700
+
+    Initial commit
