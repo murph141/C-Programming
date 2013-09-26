@@ -4,6 +4,10 @@
 #include "pa05.h"
 #define MAXIMUM_LENGTH 80
 
+int compstr(const void *, const void *);
+int compint(const void *, const void *);
+
+
 /*
  * Read a file of integers.
  *
@@ -63,6 +67,33 @@
 
 int * readInteger(char * filename, int * numInteger)
 {
+  int * arr;
+  int ind = 0;
+  FILE * fptr = fopen(filename, "r");
+  int buffer;
+
+  if(fptr == NULL)
+  {
+    return NULL;
+  }
+
+  while(fscanf(fptr, "%d", &buffer) == 1)
+  {
+    (*numInteger)++;
+  }
+
+  fseek(fptr, 0 , SEEK_SET);
+
+  arr = malloc(sizeof(int) * (*numInteger));
+
+  while(fscanf(fptr, "%d", &arr[ind]) == 1)
+  {
+    ind++;
+  }
+
+  fclose(fptr);
+
+  return arr;
 }
 
 /* ----------------------------------------------- */
@@ -133,6 +164,35 @@ int * readInteger(char * filename, int * numInteger)
 
 char * * readString(char * filename, int * numString)
 {
+  char buffer[MAXIMUM_LENGTH];
+  int ind = 0;
+  char * * strArr;
+  FILE * fptr = fopen(filename, "r");
+
+  if(fptr == NULL)
+  {
+    return NULL;
+  }
+
+  while(fgets(buffer, MAXIMUM_LENGTH, fptr) != NULL)
+  {
+    (*numString)++;
+  }
+
+  fseek(fptr, 0, SEEK_SET);
+
+  strArr = malloc(sizeof(char *) * (*numString));
+
+  while(fgets(buffer, MAXIMUM_LENGTH, fptr) != NULL)
+  {
+    strArr[ind] = malloc(sizeof(char) * (strlen(buffer) + 1));
+    strcpy(strArr[ind], buffer);
+    ind++;
+  }
+
+  fclose(fptr);
+
+  return strArr;
 }
 
 /* ----------------------------------------------- */
@@ -141,6 +201,12 @@ char * * readString(char * filename, int * numString)
  */
 void printInteger(int * arrInteger, int numInteger)
 {
+  int ind;
+
+  for(ind = 0; ind < numInteger; ind++)
+  {
+    printf("%d\n", arrInteger[ind]);
+  }
 }
 
 /* ----------------------------------------------- */
@@ -151,6 +217,12 @@ void printInteger(int * arrInteger, int numInteger)
  */
 void printString(char * * arrString, int numString)
 {
+  int ind;
+
+  for(ind = 0; ind < numString; ind++)
+  {
+    printf("%s\n", arrString[ind]);
+  }
 }
 
 /* ----------------------------------------------- */
@@ -159,6 +231,7 @@ void printString(char * * arrString, int numString)
  */
 void freeInteger(int * arrInteger, int numInteger)
 {
+  free(arrInteger);
 }
 
 /* ----------------------------------------------- */
@@ -169,6 +242,14 @@ void freeInteger(int * arrInteger, int numInteger)
  */
 void freeString(char * * arrString, int numString)
 {
+  int ind;
+
+  for(ind = 0; ind < numString; ind++)
+  {
+    free(arrString[ind]);
+  }
+
+  free(arrString);
 }
 
 /* ----------------------------------------------- */
@@ -191,6 +272,25 @@ void freeString(char * * arrString, int numString)
 
 int saveInteger(char * filename, int * arrInteger, int numInteger)
 {
+  FILE * fptr = fopen(filename, "w");
+  int ind;
+
+  if(fptr == NULL)
+  {
+    return 0;
+  }
+
+  for(ind = 0; ind < numInteger; ind++)
+  {
+    if(fprintf(fptr, "%d", arrInteger[ind]) < 0)
+    {
+      fclose(fptr);
+      return 0;
+    }
+  }
+
+  fclose(fptr);
+  return 1;
 }
 
 /* ----------------------------------------------- */
@@ -213,6 +313,25 @@ int saveInteger(char * filename, int * arrInteger, int numInteger)
 
 int saveString(char * filename, char * * arrString, int numString)
 {
+  FILE * fptr = fopen(filename, "w");
+  int ind;
+
+  if(fptr == NULL)
+  {
+    return 0;
+  }
+
+  for(ind = 0; ind < numString; ind++)
+  {
+    if(fprintf(fptr, "%s", arrString[ind])  < 0)
+    {
+      fclose(fptr);
+      return 0;
+    }
+  }
+
+  fclose(fptr);
+  return 1;
 }
 
 /* ----------------------------------------------- */
@@ -225,6 +344,7 @@ int saveString(char * filename, char * * arrString, int numString)
 
 void sortInteger(int * arrInteger, int numInteger)
 {
+  qsort(arrInteger, numInteger, sizeof(int), compint);
 }
 
 
@@ -241,6 +361,32 @@ void sortInteger(int * arrInteger, int numInteger)
 
 void sortString(char * * arrString, int numString)
 {
+  qsort(arrString, numString, sizeof(char *), compstr);
 }
 
 
+int compstr(const void * s1, const void * s2)
+{
+  char * str1 = *(char **) s1;
+  char * str2 = *(char **) s2;
+
+  return strcmp(str1, str2);
+}
+
+
+int compint(const void * i1, const void * i2)
+{
+  int int1 = * (int *) i1;
+  int int2 = * (int *) i2;
+
+  if(int1 < int2)
+  {
+    return 1;
+  }
+  if(int1 > int2)
+  {
+    return -1;
+  }
+
+  return 0;
+}
