@@ -282,7 +282,7 @@ int saveInteger(char * filename, int * arrInteger, int numInteger)
 
   for(ind = 0; ind < numInteger; ind++)
   {
-    if(fprintf(fptr, "%d", arrInteger[ind]) < 0)
+    if(fprintf(fptr, "%d\n", arrInteger[ind]) < 0)
     {
       fclose(fptr);
       return 0;
@@ -381,11 +381,11 @@ int compint(const void * i1, const void * i2)
 
   if(int1 < int2)
   {
-    return 1;
+    return -1;
   }
   if(int1 > int2)
   {
-    return -1;
+    return 1;
   }
 
   return 0;
