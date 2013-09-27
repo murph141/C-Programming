@@ -226,11 +226,13 @@ void printString(char * * arrString, int numString)
   {
     int len = strlen(arrString[ind]);
 
-    printf("%s", arrString[ind]); //Print a string
-
     if(arrString[ind][len - 1] != '\n' || len == 0)
     {
-      printf("\n");
+      printf("%s\n", arrString[ind]); //Print a string
+    }
+    else
+    {
+      printf("%s", arrString[ind]); //Print a string
     }
   }
 }
@@ -333,10 +335,23 @@ int saveString(char * filename, char * * arrString, int numString)
 
   for(ind = 0; ind < numString; ind++)
   {
-    if(fprintf(fptr, "%s", arrString[ind])  < 0)
+    int len = strlen(arrString[ind]); //Make a variable to store the string length
+
+    if(arrString[ind][len - 1] != '\n' || len == 0)
     {
-      fclose(fptr); //Close the file
-      return 0; //Return a 0 to signify an error
+      if(fprintf(fptr, "%s\n", arrString[ind]) < 0)
+      {
+        fclose(fptr); //Close file if there is an error
+        return 0; //Return 0 if there is an error
+      }
+    }
+    else
+    {
+      if(fprintf(fptr, "%s", arrString[ind]) < 0)
+      {
+        fclose(fptr); //Close file if there is an error
+        return 0; //Return 0 if there is an error
+      }
     }
   }
 
