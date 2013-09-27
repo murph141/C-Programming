@@ -224,7 +224,14 @@ void printString(char * * arrString, int numString)
 
   for(ind = 0; ind < numString; ind++)
   {
-    printf("%s\n", arrString[ind]); //Print a string on a separate line numString times
+    int len = strlen(arrString[ind]);
+
+    printf("%s", arrString[ind]); //Print a string
+
+    if(arrString[ind][len - 1] != '\n' || len == 0)
+    {
+      printf("\n");
+    }
   }
 }
 
