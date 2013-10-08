@@ -1,4 +1,6 @@
-
+#include<stdio.h>
+#include<stdlib.h>
+#include "pa06.h"
 /*
  * For this assigment you will write some functions that help 
  * accomplish the following procedure:
@@ -163,12 +165,24 @@
   */
 struct Image * loadImage(const char* filename)
 {
-  FILE * fptr = fopen(filename);
-  
+  FILE * fptr = fopen(filename, "r");
+  int x = 16;
+
   if(fptr == NULL)
   {
     return NULL;
   }
+
+  while(x != 0)
+  {
+    if(fgetc(fptr) == EOF)
+    {
+      return NULL;
+    }
+    x--;
+  }
+
+  fseek(fptr, 0, SEEK_SET);
 
   return NULL;
 }
