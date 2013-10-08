@@ -1,6 +1,3 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include "pa06.h"
 /*
  * For this assigment you will write some functions that help 
  * accomplish the following procedure:
@@ -86,7 +83,8 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
-
+#include<inttypes.h>
+#define SIZE 4
 #include "pa06.h"
 
 /*
@@ -165,13 +163,19 @@
   */
 struct Image * loadImage(const char* filename)
 {
-  FILE * fptr = fopen(filename, "r");
-  int x = 16;
+  FILE * fptr = fopen(filename, "rb");
+  struct Image * v = 0;
+  int magic;
+  int width;
+  int height;
+  int length;
 
   if(fptr == NULL)
   {
     return NULL;
   }
+
+  int x = 4 * SIZE;
 
   while(x != 0)
   {
@@ -184,7 +188,93 @@ struct Image * loadImage(const char* filename)
 
   fseek(fptr, 0, SEEK_SET);
 
-  return NULL;
+  fread(&magic, SIZE, 1, fptr);
+
+  
+  assert(magic == ECE264_IMAGE_MAGIC_BITS);
+
+  if(magic != ECE264_IMAGE_MAGIC_BITS)
+  {
+    fclose(fptr);
+
+    return NULL;
+  }
+  
+  fread(&width, SIZE, 1, fptr);
+
+  assert(width > 0);
+  if(width <= 0)
+  {
+    fclose(fptr);
+
+    return NULL;
+  }
+
+  fread(&height, SIZE, 1, fptr);
+
+  assert(height > 0);
+  if(height <= 0)
+  {
+    fclose(fptr);
+
+    return NULL;
+  }
+
+  fread(&length, SIZE, 1, fptr);
+
+  char * comment = malloc(sizeof(char) * length);
+
+  assert(comment != NULL);
+  if(comment == NULL)
+  {
+    fclose(fptr);
+
+    return NULL;
+  }
+
+
+  for(x = 0; x < length; x++)
+  {
+    if(fscanf(fptr, "%c", &comment[x]) != 1)
+    {
+      fclose(fptr);
+
+      return NULL;
+    }
+  }
+
+  printf("%s\n", comment);
+  uint8_t * pixels = malloc(sizeof(uint8_t) * (width * height));
+
+  if(pixels == NULL)
+  {
+    fclose(fptr);
+
+    return NULL;
+  }
+
+  for(x = 0; x < (width * height); x++)
+  {
+    if(fscanf(fptr, "%" SCNu8 "", &pixels[x]) == 1)
+    {
+      fclose(fptr);
+
+      return NULL;
+    }
+  }
+
+  if(fgetc(fptr) != EOF)
+  {
+    fclose(fptr);
+
+    return NULL;
+  }
+
+  v->width = width;
+  v->height = height;
+  v->comment = comment;
+  v->data = pixels;
+  return v;
 }
 
 
