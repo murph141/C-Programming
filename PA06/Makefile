@@ -13,4 +13,7 @@ $(TARGET): $(OBJS)
 	$(GCC) $(CFLAGS) -c -o $@ $<
 
 clean:
-	rm $(TARGET) *.o
+	rm $(TARGET) *.o *.ppm
+
+testall:
+	@./test.sh

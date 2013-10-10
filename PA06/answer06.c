@@ -182,6 +182,17 @@ struct Image * loadImage(const char* filename)
     return NULL;
   }
 
+  if(sizeof(header) != sizeof(struct ImageHeader))
+  {
+    printf("Header isn't long enough\n");
+
+    fclose(fptr);
+
+    return NULL;
+  }
+
+  printf("Magic: %x Width: %" PRIu32 " Height: %" PRIu32 " Comment Lenght: %" PRIu32 "\n", header.magic_bits, header.width, header.height, header.comment_len);
+
   if(header.width <= 0)
   {
     printf("Width is too small\n");
@@ -200,6 +211,7 @@ struct Image * loadImage(const char* filename)
     return NULL;
   }
 
+  
   if(header.magic_bits != ECE264_IMAGE_MAGIC_BITS)
   {
     printf("Magic bits are incorrect\n");
@@ -208,6 +220,7 @@ struct Image * loadImage(const char* filename)
 
     return NULL;
   }
+  
 
   struct Image * image = malloc(sizeof(struct Image));
   
@@ -226,6 +239,18 @@ struct Image * loadImage(const char* filename)
     return NULL;
   }
 
+  if(fread(image->comment, sizeof(char), header.comment_len, fptr) != 1)
+  {
+    printf("Comment is bad\n");
+
+    fclose(fptr);
+
+    freeImage(image);
+
+    return NULL;
+  }
+
+  printf("%s\n", image->comment);
   image->data = malloc(header.width * header.height * sizeof(uint8_t));
 
   if(image->data == NULL)
@@ -237,8 +262,33 @@ struct Image * loadImage(const char* filename)
     return NULL;
   }
 
+  if(fread(image->data, sizeof(uint8_t), (header.width * header.height), fptr) == 1)
+  {
+    printf("Data is bad\n");
+
+    fclose(fptr);
+
+    freeImage(image);
+
+    return NULL;
+  }
+  
+  if(fgetc(fptr) == 1)
+  {
+    printf("Bad\n");
+
+    fclose(fptr);
+
+    freeImage(image);
+
+    return NULL;
+  }
+
+  fclose(fptr);
+
   return image;
 }
+
 
 
 /*
@@ -253,6 +303,7 @@ struct Image * loadImage(const char* filename)
  */
 void freeImage(struct Image * image)
 {
+  free(image->comment);
   free(image->data);
   free(image);
 }
@@ -289,18 +340,19 @@ void linearNormalization(struct Image * image)
 
   for(i = 0; i < image->height * image->width; i++)
   {
-    if(*(image + i).data < min)
+    if(image->data[i] < min)
     {
-      min = *(image + i).data;
+      min = image->data[i];
     }
-    else if(*(image + i).data > max)
+    else if(image->data[i] > max)
     {
-      max = *(image + i).data;
+      max = image->data[i];
     }
   }
 
+  printf("max: %d, min: %d\n", max, min);
   for(i = 0; i < image->height * image->width; i++)
   {
-    *(image + i).data = (*(image + i).data - min) * 255.0 / (max - min);
+    image->data[i] = (image->data[i] - min) * 255.0 / (max - min);
   }
 }
