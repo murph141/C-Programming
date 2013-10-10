@@ -161,120 +161,83 @@
 *
 * Good luck.
   */
+
 struct Image * loadImage(const char* filename)
 {
   FILE * fptr = fopen(filename, "rb");
-  struct Image * v = 0;
-  int magic;
-  int width;
-  int height;
-  int length;
-
+  
   if(fptr == NULL)
   {
+    fclose(fptr);
+
     return NULL;
   }
 
-  int x = 4 * SIZE;
+  struct ImageHeader header;
 
-  while(x != 0)
+  if(fread(&header, sizeof(struct ImageHeader), 1, fptr) != 1)
   {
-    if(fgetc(fptr) == EOF)
-    {
-      return NULL;
-    }
-    x--;
+    fclose(fptr);
+
+    return NULL;
   }
 
-  fseek(fptr, 0, SEEK_SET);
+  if(header.width <= 0)
+  {
+    printf("Width is too small\n");
 
-  fread(&magic, SIZE, 1, fptr);
+    fclose(fptr);
 
+    return NULL;
+  }
+
+  if(header.height <= 0)
+  {
+    printf("Height is too small\n");
+
+    fclose(fptr);
+
+    return NULL;
+  }
+
+  if(header.magic_bits != ECE264_IMAGE_MAGIC_BITS)
+  {
+    printf("Magic bits are incorrect\n");
+
+    fclose(fptr);
+
+    return NULL;
+  }
+
+  struct Image * image = malloc(sizeof(struct Image));
   
-  assert(magic == ECE264_IMAGE_MAGIC_BITS);
-
-  if(magic != ECE264_IMAGE_MAGIC_BITS)
-  {
-    fclose(fptr);
-
-    return NULL;
-  }
+  image->width = header.width;
   
-  fread(&width, SIZE, 1, fptr);
+  image->height = header.height;
 
-  assert(width > 0);
-  if(width <= 0)
+  image->comment = malloc(header.comment_len * sizeof(char));
+
+  if(image->comment == NULL)
   {
     fclose(fptr);
+
+    freeImage(image);
 
     return NULL;
   }
 
-  fread(&height, SIZE, 1, fptr);
+  image->data = malloc(header.width * header.height * sizeof(uint8_t));
 
-  assert(height > 0);
-  if(height <= 0)
+  if(image->data == NULL)
   {
     fclose(fptr);
+
+    freeImage(image);
 
     return NULL;
   }
 
-  fread(&length, SIZE, 1, fptr);
-
-  char * comment = malloc(sizeof(char) * length);
-
-  assert(comment != NULL);
-  if(comment == NULL)
-  {
-    fclose(fptr);
-
-    return NULL;
-  }
-
-
-  for(x = 0; x < length; x++)
-  {
-    if(fscanf(fptr, "%c", &comment[x]) != 1)
-    {
-      fclose(fptr);
-
-      return NULL;
-    }
-  }
-
-  printf("%s\n", comment);
-  uint8_t * pixels = malloc(sizeof(uint8_t) * (width * height));
-
-  if(pixels == NULL)
-  {
-    fclose(fptr);
-
-    return NULL;
-  }
-
-  for(x = 0; x < (width * height); x++)
-  {
-    if(fscanf(fptr, "%" SCNu8 "", &pixels[x]) == 1)
-    {
-      fclose(fptr);
-
-      return NULL;
-    }
-  }
-
-  if(fgetc(fptr) != EOF)
-  {
-    fclose(fptr);
-
-    return NULL;
-  }
-
-  v->width = width;
-  v->height = height;
-  v->comment = comment;
-  v->data = pixels;
-  return v;
+  return image;
 }
 
 
@@ -290,7 +253,8 @@ struct Image * loadImage(const char* filename)
  */
 void freeImage(struct Image * image)
 {
-
+  free(image->data);
+  free(image);
 }
 
 /*
@@ -319,8 +283,24 @@ void freeImage(struct Image * image)
  */
 void linearNormalization(struct Image * image)
 {
+  int min = 255;
+  int max = 0;
+  int i;
 
+  for(i = 0; i < image->height * image->width; i++)
+  {
+    if(*(image + i).data < min)
+    {
+      min = *(image + i).data;
+    }
+    else if(*(image + i).data > max)
+    {
+      max = *(image + i).data;
+    }
+  }
+
+  for(i = 0; i < image->height * image->width; i++)
+  {
+    *(image + i).data = (*(image + i).data - min) * 255.0 / (max - min);
+  }
 }
-
-
-

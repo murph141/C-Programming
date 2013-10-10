@@ -13,5 +13,4 @@ $(TARGET): $(OBJS)
 	$(GCC) $(CFLAGS) -c -o $@ $<
 
 clean:
-	rm $(TARGET)
-	rm *.o
+	rm $(TARGET) *.o
