@@ -84,7 +84,6 @@
 #include <assert.h>
 #include <string.h>
 #include<inttypes.h>
-#define SIZE 4
 #include "pa06.h"
 
 /*
@@ -168,8 +167,6 @@ struct Image * loadImage(const char* filename)
   
   if(fptr == NULL)
   {
-    fclose(fptr);
-
     return NULL;
   }
 
@@ -177,15 +174,6 @@ struct Image * loadImage(const char* filename)
 
   if(fread(&header, sizeof(struct ImageHeader), 1, fptr) != 1)
   {
-    fclose(fptr);
-
-    return NULL;
-  }
-
-  if(sizeof(header) != sizeof(struct ImageHeader))
-  {
-    printf("Header isn't long enough\n");
-
     fclose(fptr);
 
     return NULL;
@@ -211,7 +199,7 @@ struct Image * loadImage(const char* filename)
     return NULL;
   }
 
-  
+ /* 
   if(header.magic_bits != ECE264_IMAGE_MAGIC_BITS)
   {
     printf("Magic bits are incorrect\n");
@@ -220,6 +208,7 @@ struct Image * loadImage(const char* filename)
 
     return NULL;
   }
+  */
   
 
   struct Image * image = malloc(sizeof(struct Image));
@@ -234,52 +223,79 @@ struct Image * loadImage(const char* filename)
   {
     fclose(fptr);
 
-    freeImage(image);
-
     return NULL;
   }
 
-  if(fread(image->comment, sizeof(char), header.comment_len, fptr) != 1)
+  if(fread(image->comment, sizeof(char), header.comment_len, fptr) != header.comment_len)
   {
     printf("Comment is bad\n");
 
     fclose(fptr);
 
-    freeImage(image);
+    free(image->comment);
 
     return NULL;
   }
 
-  printf("%s\n", image->comment);
+ 
+  if(image->comment[header.comment_len - 1] != '\0')
+  {
+    printf("Comment doesn't end in a null character\n");
+
+    fclose(fptr);
+
+    free(image->comment);
+
+    return NULL;
+  }
+  
+
   image->data = malloc(header.width * header.height * sizeof(uint8_t));
 
   if(image->data == NULL)
   {
     fclose(fptr);
 
-    freeImage(image);
+    free(image->comment);
 
     return NULL;
   }
 
-  if(fread(image->data, sizeof(uint8_t), (header.width * header.height), fptr) == 1)
+  if(fread(image->data, sizeof(uint8_t), (header.width * header.height), fptr) != (header.width * header.height))
   {
     printf("Data is bad\n");
 
     fclose(fptr);
 
-    freeImage(image);
+    free(image->comment);
+
+    free(image->data);
+
+    return NULL;
+  }
+
+  if(sizeof(image->data) / sizeof(uint8_t)  != header.width * header.height)
+  {
+    printf("Height or width wrong\n");
+
+    fclose(fptr);
+
+    free(image->comment);
+
+    free(image->data);
 
     return NULL;
   }
   
-  if(fgetc(fptr) == 1)
+  if(feof(fptr))
   {
-    printf("Bad\n");
+    printf("\nBad\n");
 
     fclose(fptr);
 
-    freeImage(image);
+    free(image->comment);
+
+    free(image->data);
 
     return NULL;
   }
@@ -303,8 +319,6 @@ struct Image * loadImage(const char* filename)
  */
 void freeImage(struct Image * image)
 {
-  free(image->comment);
-  free(image->data);
   free(image);
 }
 
