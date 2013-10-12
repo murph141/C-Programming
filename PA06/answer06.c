@@ -163,7 +163,7 @@
 
 struct Image * loadImage(const char* filename)
 {
-  FILE * fptr = fopen(filename, "rb");
+  FILE * fptr = fopen(filename, "rb"); //Open file
 
   if(fptr == NULL)
   {
@@ -172,68 +172,57 @@ struct Image * loadImage(const char* filename)
 
   struct ImageHeader header;
 
-  if(fread(&header, sizeof(struct ImageHeader), 1, fptr) != 1)
+  if(fread(&header, sizeof(struct ImageHeader), 1, fptr) != 1) //Header is the size of the structure ImageHeader
   {
     fclose(fptr);
 
     return NULL;
   }
 
-  if(header.width <= 0)
+  if(header.width <= 0) //Check errors
   {
     fclose(fptr);
 
     return NULL;
   }
 
-  if(header.height <= 0)
+  if(header.height <= 0) //Check errors
   {
     fclose(fptr);
 
     return NULL;
   }
 
-  if(header.comment_len <= 0)
+  if(header.comment_len <= 0) //Check errors
   {
     fclose(fptr);
 
     return NULL;
   }
 
-     if(header.magic_bits != ECE264_IMAGE_MAGIC_BITS)
-     {
-     fclose(fptr);
-
-     return NULL;
-     }
-
-
-  struct Image * image = malloc(sizeof(struct Image));
-
-  image->width = header.width;
-
-  image->height = header.height;
-
-  image->comment = malloc(header.comment_len * sizeof(char));
-
-  if(image->comment == NULL)
+  if(header.magic_bits != ECE264_IMAGE_MAGIC_BITS) //Check errors
   {
     fclose(fptr);
 
     return NULL;
   }
 
-  if(fread(image->comment, sizeof(char), header.comment_len, fptr) != header.comment_len)
+  struct Image * image = malloc(sizeof(struct Image)); //Declare Image structure
+
+  image->width = header.width; //Assign value
+
+  image->height = header.height; //Assign value
+
+  image->comment = malloc(header.comment_len * sizeof(char)); //Allocate space
+
+  if(image->comment == NULL) //Check errors
   {
     fclose(fptr);
-
-    freeImage(image);
 
     return NULL;
   }
 
-
-  if(image->comment[header.comment_len - 1] != '\0')
+  if(fread(image->comment, sizeof(char), header.comment_len, fptr) != header.comment_len) //Check errors
   {
     fclose(fptr);
 
@@ -242,10 +231,7 @@ struct Image * loadImage(const char* filename)
     return NULL;
   }
 
-
-  image->data = malloc(header.width * header.height * sizeof(uint8_t));
-
-  if(image->data == NULL)
+  if(image->comment[header.comment_len - 1] != '\0') //Check errors
   {
     fclose(fptr);
 
@@ -254,8 +240,9 @@ struct Image * loadImage(const char* filename)
     return NULL;
   }
 
+  image->data = malloc(header.width * header.height * sizeof(uint8_t)); //Allocate space
 
-  if(fread(image->data, sizeof(uint8_t), (header.width * header.height), fptr) != (header.width * header.height))
+  if(image->data == NULL) //Check errors
   {
     fclose(fptr);
 
@@ -264,7 +251,16 @@ struct Image * loadImage(const char* filename)
     return NULL;
   }
 
-  if(fread(&header, sizeof(uint8_t), 1, fptr) == 1)
+  if(fread(image->data, sizeof(uint8_t), (header.width * header.height), fptr) != (header.width * header.height)) //Check Errors
+  {
+    fclose(fptr);
+
+    freeImage(image);
+
+    return NULL;
+  }
+
+  if(fread(&header, sizeof(uint8_t), 1, fptr) == 1) //Check errors
   {
     fclose(fptr);
 
@@ -279,7 +275,6 @@ struct Image * loadImage(const char* filename)
 }
 
 
-
 /*
  * ===================================================================
  * Free memory for an image structure
@@ -292,10 +287,12 @@ struct Image * loadImage(const char* filename)
  */
 void freeImage(struct Image * image)
 {
-  if(image != NULL)
+  if(image != NULL) //If image structure has stuff in it
   {
     free(image->data);
-    free(image->comment);
+
+    free(image->comment); //Free space here, above, and below
+
     free(image);
   }
 }
@@ -324,27 +321,27 @@ void freeImage(struct Image * image)
  * The first for-loop completes step (1), and the second for-loop 
  * to complete step (2). 
  */
+
 void linearNormalization(struct Image * image)
 {
-  int min = 255;
-  int max = 0;
-  int i;
+  int min = 255; //Min is the highest value possible
+  int max = 0; //Max is the lowest value possible
+  int i; //Counting variable
 
-  for(i = 0; i < image->height * image->width; i++)
+  for(i = 0; i < image->height * image->width; i++) //Loop through all the elements of image->data
   {
     if(image->data[i] < min)
     {
-      min = image->data[i];
+      min = image->data[i]; //Min is new lowest value
     }
     else if(image->data[i] > max)
     {
-      max = image->data[i];
+      max = image->data[i]; //Max is new highest value
     }
   }
 
-  printf("max: %d, min: %d\n", max, min);
   for(i = 0; i < image->height * image->width; i++)
   {
-    image->data[i] = (image->data[i] - min) * 255.0 / (max - min);
+    image->data[i] = (image->data[i] - min) * 255.0 / (max - min); //Scale structure value accordingly
   }
 }
