@@ -2,6 +2,35 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+void sort(int *, int *, int);
+void swap(int *, int *);
+
+void swap(int * a, int * b)
+{
+  int temp;
+  temp = * a;
+  *a = * b;
+  *b = temp;
+}
+
+void sort(int * value, int * index, int length)
+{
+  int i;
+  int j;
+
+  for(i = 0; i < length; i++)
+  {
+    for(j = i + 1; j < length; j++)
+    {
+      if(index[i] > index[j])
+      {
+        swap(&index[i], &index[j]);
+        swap(&value[i], &value[j]);
+      }
+    }
+  }
+}
+
 /**
  * Prints a linked-list "head" into the output fie "out"
  *
@@ -39,7 +68,7 @@ void List_destroy(Node * head)
   {
     return;
   }
-  List_destory(head -> next);
+  List_destroy(head -> next);
   free(head);
 }
 
@@ -95,7 +124,19 @@ Node * List_create(int value, int index)
  */
 Node * List_build(int * value, int * index, int length)
 {
-  return NULL;
+  Node * head = NULL;
+
+  sort(value, index, length);
+
+  while(length)
+  {
+    head = List_insert_ascend(head, value[length - 1], index[length - 1]);
+    length--;
+  }
+
+  FILE * fptr = fopen("test", "rw");
+  List_print(fptr, head);
+  return head;
 }
 
 
@@ -120,7 +161,10 @@ Node * List_build(int * value, int * index, int length)
  */
 Node * List_insert_ascend(Node * head, int value, int index)
 {
-  return NULL;
+  Node * ln = List_create(value, index);
+  ln -> next = head;
+
+  return ln;
 }
 
 
@@ -136,7 +180,24 @@ Node * List_insert_ascend(Node * head, int value, int index)
  */
 Node * List_delete(Node * head, int index)
 {
-  return NULL;
+  Node * search = List_getNode(head, index);
+  search = search -> next;
+  free(search);
+  return head;
+}
+
+Node * List_getNode(Node * head, int index)
+{
+  if(head == NULL)
+  {
+    return NULL;
+  }
+
+  if ((head -> index) == index)
+  {
+    return head;
+  }
+  return List_getNode(head -> next, index);
 }
 
 /**
@@ -158,7 +219,18 @@ Node * List_delete(Node * head, int index)
  */
 Node * List_copy(Node * head)
 {
-  return NULL;
+  if(head == NULL)
+  {
+    return NULL;
+  }
+
+  Node * newNode = malloc(sizeof(Node));
+  newNode -> next = NULL;
+  newNode -> value = head -> value;
+  newNode -> index = head -> index;
+  newNode -> next = List_copy(head -> next);
+
+  return newNode;
 }
 
 
@@ -184,6 +256,24 @@ Node * List_copy(Node * head)
  */
 Node * List_merge(Node * head1, Node * head2)
 {
-  return NULL;
-}
+  Node * copy = List_copy(head1);
+  Node * p = head1;
+  Node * q = head2;
 
+  while(p -> next != NULL && q -> next != NULL)
+  {
+    if(List_getNode(head2, copy -> index) != NULL)
+    {
+      copy -> value += (List_getNode(head2, copy -> index) -> value);
+
+      if(copy -> value == 0)
+      {
+        List_delete(copy, copy -> index);
+      }
+    }
+    p -> next = p -> next -> next;
+    q -> next = q -> next -> next;
+  }
+
+  return copy;
+}
