@@ -1,6 +1,6 @@
 GCC = gcc
 CFLAGS = -g -Wall -Wshadow
-LIBS =
+LIBS = pa07.h
 SOURCES = answer07.c pa07.c
 TARGET = pa07
 
@@ -13,8 +13,7 @@ $(TARGET): $(OBJS)
 	$(GCC) $(CFLAGS) -c -o $@ $<
 
 clean:
-	rm $(TARGET) *.o
+	rm $(TARGET) *.o bin/input* bin/log*
 
-testall:
+testall: $(TARGET)
 	bin/test.sh
-	valgrind --tool=memcheck --leak-check=full --verbose --log-file=./bin/log ./pa07 input/input0_A input/input0_B

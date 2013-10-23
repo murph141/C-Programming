@@ -37,7 +37,7 @@ void List_destroy(Node * head)
 {
   if(head == NULL)
   {
-    return;
+    return; //When head doesn't point to anything, return and start freeing
   }
   List_destroy(head -> next);
   free(head);
@@ -59,6 +59,13 @@ void List_destroy(Node * head)
 Node * List_create(int value, int index)
 {
   Node * ln = malloc(sizeof(Node));
+
+  //Check for incorrectly allocated memory
+  if(ln == NULL)
+  {
+    printf("Memory Allocated Incorrectly (List_create Function).\n");
+    return NULL;
+  }
 
   ln -> next = NULL;
   ln -> value = value;
@@ -95,14 +102,13 @@ Node * List_create(int value, int index)
  */
 Node * List_build(int * value, int * index, int length)
 {
-  int i = 0;
-  Node * head = NULL;
-
+  int i = 0; //Counter variable
+  Node * head = NULL; //Initialize the variable to NULL
 
   while(i != length)
   {
     head = List_insert_ascend(head, value[i], index[i]);
-    i++;
+    i++; //Increment i
   }
 
   return head;
@@ -132,26 +138,25 @@ Node * List_insert_ascend(Node * head, int value, int index)
 {
   if(head == NULL)
   {
-    head = List_create(value, index);
+    head = List_create(value, index); // Create a new list if the node is NULL
   }
-
-  else{
-
+  else
+  {
     if(index == head -> index)
     {
-      head -> value += value;
+      head -> value += value; //Add values together if indicies are the same
     }
 
     if(index > head -> index)
     {
-      head -> next = List_insert_ascend(head -> next, value, index);
+      head -> next = List_insert_ascend(head -> next, value, index); //Call the function again if the index is too big
     }
 
     if(index < head -> index)
     {
-      Node * p = head;
-      head = List_create(value, index);
-      head -> next = p;
+      Node * p = head; //Point to next value
+      head = List_create(value, index); //Add a value to the node
+      head -> next = p; //Have the last node point to the previous last node
     }
   }
 
@@ -173,15 +178,15 @@ Node * List_delete(Node * head, int index)
 {
   if(head == NULL)
   {
-    return NULL;
+    return NULL; //If the node is NULL just return NULL
   }
   if((head -> index) == index)
   {
-    Node * p = head -> next;
-    free(head);
+    Node * p = head -> next; //Remember the address of the next value
+    free(head); //Release memory
     return p;
   }
-  head -> next = List_delete(head -> next, index);
+  head -> next = List_delete(head -> next, index); //Recall the delete function if index is not found
   return head;
 }
 
@@ -189,14 +194,14 @@ Node * List_getNode(Node * head, int index)
 {
   if(head == NULL)
   {
-    return NULL;
+    return NULL; //If the node is NULL, there is nothing to get
   }
 
   if ((head -> index) == index)
   {
-    return head;
+    return head; //Return the address if foun
   }
-  return List_getNode(head -> next, index);
+  return List_getNode(head -> next, index); //Recall the function
 }
 
 /**
@@ -220,13 +225,24 @@ Node * List_copy(Node * head)
 {
   if(head == NULL)
   {
+    return NULL; //Return NULL if head is NULL
+  }
+
+  Node * newNode = malloc(sizeof(Node)); //Allocate space
+
+  //Check that memory was allocated correctly
+  if(newNode == NULL)
+  {
+    printf("Memory Allocated Incorrectly (List_delete Function).\n");
     return NULL;
   }
 
-  Node * newNode = malloc(sizeof(Node));
+  //Copy the values
   newNode -> next = NULL;
   newNode -> value = head -> value;
   newNode -> index = head -> index;
+
+  //Recall function to get a "deep" copy
   newNode -> next = List_copy(head -> next);
 
   return newNode;
@@ -258,16 +274,19 @@ Node * List_merge(Node * head1, Node * head2)
 {
   Node * copy = List_copy(head1);
 
+  //Go through the head2 structure
   while(head2 != NULL)
   {
+    //Copy is equal to itself plus the value and index of head2
     copy = List_insert_ascend(copy, head2 -> value, head2 -> index);
 
+    //If the node's values at head2's index is 0, delete the node
     if(List_getNode(copy, head2 -> index) -> value == 0)
     {
-      copy = List_delete(copy, head2 -> index);
+      copy = List_delete(copy, head2 -> index); //Delete the node
     }
 
-    head2 = head2 -> next;
+    head2 = head2 -> next; //Move through the head2 structure
   }
 
   return copy;
