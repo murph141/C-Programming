@@ -14,3 +14,7 @@ $(TARGET): $(OBJS)
 
 clean:
 	rm $(TARGET) *.o
+
+testall:
+	bin/test.sh
+	valgrind --tool=memcheck --leak-check=full --verbose --log-file=./bin/log ./pa07 input/input0_A input/input0_B

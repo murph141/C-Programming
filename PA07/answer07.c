@@ -2,35 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void sort(int *, int *, int);
-void swap(int *, int *);
-
-void swap(int * a, int * b)
-{
-  int temp;
-  temp = * a;
-  *a = * b;
-  *b = temp;
-}
-
-void sort(int * value, int * index, int length)
-{
-  int i;
-  int j;
-
-  for(i = 0; i < length; i++)
-  {
-    for(j = i + 1; j < length; j++)
-    {
-      if(index[i] > index[j])
-      {
-        swap(&index[i], &index[j]);
-        swap(&value[i], &value[j]);
-      }
-    }
-  }
-}
-
 /**
  * Prints a linked-list "head" into the output fie "out"
  *
@@ -124,18 +95,16 @@ Node * List_create(int value, int index)
  */
 Node * List_build(int * value, int * index, int length)
 {
+  int i = 0;
   Node * head = NULL;
 
-  sort(value, index, length);
 
-  while(length)
+  while(i != length)
   {
-    head = List_insert_ascend(head, value[length - 1], index[length - 1]);
-    length--;
+    head = List_insert_ascend(head, value[i], index[i]);
+    i++;
   }
 
-  FILE * fptr = fopen("test", "rw");
-  List_print(fptr, head);
   return head;
 }
 
@@ -161,10 +130,32 @@ Node * List_build(int * value, int * index, int length)
  */
 Node * List_insert_ascend(Node * head, int value, int index)
 {
-  Node * ln = List_create(value, index);
-  ln -> next = head;
+  if(head == NULL)
+  {
+    head = List_create(value, index);
+  }
 
-  return ln;
+  else{
+
+    if(index == head -> index)
+    {
+      head -> value += value;
+    }
+
+    if(index > head -> index)
+    {
+      head -> next = List_insert_ascend(head -> next, value, index);
+    }
+
+    if(index < head -> index)
+    {
+      Node * p = head;
+      head = List_create(value, index);
+      head -> next = p;
+    }
+  }
+
+  return head;
 }
 
 
@@ -180,9 +171,17 @@ Node * List_insert_ascend(Node * head, int value, int index)
  */
 Node * List_delete(Node * head, int index)
 {
-  Node * search = List_getNode(head, index);
-  search = search -> next;
-  free(search);
+  if(head == NULL)
+  {
+    return NULL;
+  }
+  if((head -> index) == index)
+  {
+    Node * p = head -> next;
+    free(head);
+    return p;
+  }
+  head -> next = List_delete(head -> next, index);
   return head;
 }
 
@@ -254,25 +253,21 @@ Node * List_copy(Node * head)
  * This function should not modify either "head1" or "head2". You only
  * need to make a clone of "head1".
  */
+
 Node * List_merge(Node * head1, Node * head2)
 {
   Node * copy = List_copy(head1);
-  Node * p = head1;
-  Node * q = head2;
 
-  while(p -> next != NULL && q -> next != NULL)
+  while(head2 != NULL)
   {
-    if(List_getNode(head2, copy -> index) != NULL)
-    {
-      copy -> value += (List_getNode(head2, copy -> index) -> value);
+    copy = List_insert_ascend(copy, head2 -> value, head2 -> index);
 
-      if(copy -> value == 0)
-      {
-        List_delete(copy, copy -> index);
-      }
+    if(List_getNode(copy, head2 -> index) -> value == 0)
+    {
+      copy = List_delete(copy, head2 -> index);
     }
-    p -> next = p -> next -> next;
-    q -> next = q -> next -> next;
+
+    head2 = head2 -> next;
   }
 
   return copy;
