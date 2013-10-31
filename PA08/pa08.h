@@ -4,8 +4,8 @@
 typedef struct snode {
   int index ;
   int value ;
-  struct snode * left ;
-  struct snode * right ;
+  struct snode * left;
+  struct snode * right;
 } SparseNode ;
 
 SparseNode * SparseNode_create(int index, int value);
