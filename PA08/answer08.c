@@ -66,7 +66,7 @@ SparseNode * SparseArray_insert( SparseNode * array, int index, int value )
 
   if(array -> index == index)
   {
-    if(index)
+    if(value)
     {
       array -> value = value;
     }
@@ -104,16 +104,18 @@ SparseNode * SparseArray_insert( SparseNode * array, int index, int value )
 
 SparseNode *SparseArray_build(int * indicies, int * values, int length)
 {
-  int i = 0;
+  int i;
   SparseNode * root = NULL;
 
-  while(i != length)
+  for(i = 0; i < length; i++)
   {
     root = SparseArray_insert(root, indicies[i], values[i]);
-    i++;
+    printf("%d %d, ", indicies[i], values[i]);
   }
 
+  printf("\n\n");
   SparseArray_print(root);
+  printf("\n\n");
   return root;
 }
 
@@ -155,7 +157,7 @@ int SparseArray_getMin ( SparseNode * array )
 {
   if(array == NULL)
   {
-    return NULL;
+    return 0;
   }
 
   SparseArray_getMin(array -> left);
@@ -177,7 +179,7 @@ int SparseArray_getMax ( SparseNode * array )
 {
   if(array == NULL)
   {
-    return NULL;
+    return 0;
   }
 
   SparseArray_getMax(array -> right);
@@ -301,7 +303,7 @@ SparseNode * SparseArray_remove ( SparseNode * array, int index )
     return array;
   }
 
-  if((array -> left == NULL) && (array -> right) == NULL)
+  if((array -> left == NULL) && (array -> right == NULL))
   {
     free(array);
     return NULL;
@@ -321,7 +323,7 @@ SparseNode * SparseArray_remove ( SparseNode * array, int index )
     return node;
   }
 
-  SparseNode * newNode = array -> left;
+  SparseNode * newNode = array -> right;
   while(array -> right != NULL)
   {
     newNode = newNode -> left;
@@ -399,7 +401,8 @@ SparseNode * SparseArray_copy(SparseNode * array)
 
 SparseNode * SparseArray_merge(SparseNode * array_1, SparseNode * array_2)
 {
-  SparseNode * copy = SparseArray_copy(array_1);
+  SparseNode * copy = NULL;
+  copy = SparseArray_copy(array_1);
 
   while(array_2 != NULL)
   {
@@ -424,6 +427,6 @@ void SparseArray_print(SparseNode * array)
   }
 
   SparseArray_print(array -> left);
-  printf("%d - ", array -> index);
+  printf("%d: %d - ", array -> index, array -> value);
   SparseArray_print(array -> right);
 }
