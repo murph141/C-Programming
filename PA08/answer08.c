@@ -64,22 +64,22 @@ SparseNode * SparseArray_insert( SparseNode * array, int index, int value )
     return SparseNode_create(index, value);
   }
 
-  if(array -> index == index)
+  if((array -> index) == index)
   {
     if(value)
     {
-      array -> value = value;
+      (array -> value) = value;
     }
     return array;
   }
 
-  if(array -> index > index)
+  if((array -> index) > index)
   {
-    array -> left = SparseArray_insert(array -> left, index, value);
+    (array -> left) = SparseArray_insert((array -> left), index, value);
     return array;
   }
 
-  return array -> right = SparseArray_insert(array -> right, index, value);
+  return (array -> right) = SparseArray_insert((array -> right), index, value);
 }
 
 /* Build a sparse array tree from given indices and values with specific length.
@@ -110,12 +110,8 @@ SparseNode *SparseArray_build(int * indicies, int * values, int length)
   for(i = 0; i < length; i++)
   {
     root = SparseArray_insert(root, indicies[i], values[i]);
-    printf("%d %d, ", indicies[i], values[i]);
   }
 
-  printf("\n\n");
-  SparseArray_print(root);
-  printf("\n\n");
   return root;
 }
 
@@ -251,41 +247,6 @@ SparseNode * SparseArray_getNode(SparseNode * array, int index )
  */
 SparseNode * SparseArray_remove ( SparseNode * array, int index )
 {
-  /*
-  SparseNode * node = malloc(sizeof(SparseNode));
-  node = SparseArray_getNode(array, index);
-
-  if(node == NULL)
-  {
-    return NULL;
-  }
-
-  if(node -> left == NULL && node -> right == NULL)
-  {
-    SparseArray_destroy(node);
-  }
-
-  if(node -> left == NULL)
-  {
-    node = node -> right;
-  }
-
-  if(node -> right == NULL)
-  {
-    node = node -> left;
-  }
-
-  SparseNode * p = node;
-
-  node -> value = node -> right -> value;
-  node -> index = node -> right -> index;
-  node -> right = node -> right -> right;
-
-  free(p -> right);
-
-  return array;
-  */
-
   if (array == NULL)
   {
     return NULL;
@@ -401,6 +362,7 @@ SparseNode * SparseArray_copy(SparseNode * array)
 
 SparseNode * SparseArray_merge(SparseNode * array_1, SparseNode * array_2)
 {
+  /*
   SparseNode * copy = NULL;
   copy = SparseArray_copy(array_1);
 
@@ -415,6 +377,11 @@ SparseNode * SparseArray_merge(SparseNode * array_1, SparseNode * array_2)
 
     array_2 = array_2 -> left;
   }
+
+  return copy;
+  */
+  
+  SparseNode * copy = SparseArray_copy(array_1);
 
   return copy;
 }
