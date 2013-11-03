@@ -79,7 +79,8 @@ SparseNode * SparseArray_insert( SparseNode * array, int index, int value )
     return array;
   }
 
-  return (array -> right) = SparseArray_insert((array -> right), index, value);
+  array -> right = SparseArray_insert((array -> right), index, value);
+  return array;
 }
 
 /* Build a sparse array tree from given indices and values with specific length.
@@ -153,7 +154,7 @@ int SparseArray_getMin ( SparseNode * array )
 {
   if(array == NULL)
   {
-    return 0;
+    return NULL;
   }
 
   SparseArray_getMin(array -> left);
@@ -175,7 +176,7 @@ int SparseArray_getMax ( SparseNode * array )
 {
   if(array == NULL)
   {
-    return 0;
+    return NULL;
   }
 
   SparseArray_getMax(array -> right);
