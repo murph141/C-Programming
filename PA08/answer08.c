@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void SparseArray_print(SparseNode *);
+void SparseArray_merge_helper(SparseNode *, SparseNode *);
 
 
 /* 
@@ -23,14 +23,16 @@ void SparseArray_print(SparseNode *);
 
 SparseNode *SparseNode_create(int index, int value)
 {
-  SparseNode * ln = malloc(sizeof(SparseNode));
+  SparseNode * ln = malloc(sizeof(SparseNode)); //Allocate memory
 
+  // Check for memory allocation errors
   if(ln == NULL)
   {
     printf("Memory Allocated Incorrectly (SparseNode_create).\n");
     return NULL;
   }
 
+  //Set values
   ln -> right = NULL;
   ln -> left = NULL;
   ln -> value = value;
@@ -59,11 +61,20 @@ SparseNode *SparseNode_create(int index, int value)
 
 SparseNode * SparseArray_insert( SparseNode * array, int index, int value )
 {
+  // If nothing exists
   if (array == NULL)
   {
-    return SparseNode_create(index, value);
+    if(value)
+    {
+      return SparseNode_create(index, value);
+    }
+    else
+    {
+      return NULL;
+    }
   }
 
+  // The index already exists
   if((array -> index) == index)
   {
     if(value)
@@ -108,6 +119,7 @@ SparseNode *SparseArray_build(int * indicies, int * values, int length)
   int i;
   SparseNode * root = NULL;
 
+  // Iterate through all of the indicies and values
   for(i = 0; i < length; i++)
   {
     root = SparseArray_insert(root, indicies[i], values[i]);
@@ -134,6 +146,7 @@ void SparseArray_destroy ( SparseNode * array )
     return;
   }
 
+  // Go all the way to the end then start freeing afterwards
   SparseArray_destroy(array -> left);
   SparseArray_destroy(array -> right);
 
@@ -152,14 +165,13 @@ void SparseArray_destroy ( SparseNode * array )
  */
 int SparseArray_getMin ( SparseNode * array )
 {
-  if(array == NULL)
+  // Go all the way to the left then return the index
+  while(array -> left != NULL)
   {
-    return NULL;
+    array = array -> left;
   }
 
-  SparseArray_getMin(array -> left);
-
-  return array -> index;
+  return (array -> index);
 }
 
 /* Retrieve the largest index in the sparse array tree. 
@@ -174,14 +186,13 @@ int SparseArray_getMin ( SparseNode * array )
  */
 int SparseArray_getMax ( SparseNode * array )
 {
-  if(array == NULL)
+  // Go all the way to the right then return the index
+  while(array -> right != NULL)
   {
-    return NULL;
+    array = array -> right;
   }
 
-  SparseArray_getMax(array -> right);
-
-  return array -> index;
+  return (array -> index);
 }
 
 
@@ -199,24 +210,26 @@ int SparseArray_getMax ( SparseNode * array )
  * Hint: If the given index is smaller than the current
  * node, search left ; if it is larger, search right.
  */
-SparseNode * SparseArray_getNode(SparseNode * array, int index )
+SparseNode * SparseArray_getNode(SparseNode * array, int ind)
 {
+  // If array is empty, return NULL
   if(array == NULL)
   {
     return NULL;
   }
 
-  if(array -> index == index);
+  // Found the index
+  if((array -> index) == ind)
   {
     return array;
   }
 
-  if(array -> index > index)
+  if((array -> index) > ind)
   {
-    return SparseArray_getNode(array -> left, index);
+    return SparseArray_getNode(array -> left, ind);
   }
 
-  return SparseArray_getNode(array -> right, index);
+  return SparseArray_getNode(array -> right, ind);
 }
 
 /* Remove a value associated with a particular index from the sparse
@@ -248,52 +261,64 @@ SparseNode * SparseArray_getNode(SparseNode * array, int index )
  */
 SparseNode * SparseArray_remove ( SparseNode * array, int index )
 {
+  // If the array is empty, return NULL
   if (array == NULL)
   {
     return NULL;
   }
 
-  if(index < array -> index)
+  // Go to the left of the array 
+  if(index < (array -> index))
   {
     array -> left = SparseArray_remove(array -> left, index);
     return array;
   }
 
-  if(index > array -> index)
+  // Go to the right of the array 
+  if(index > (array -> index))
   {
     array -> right = SparseArray_remove(array -> right, index);
     return array;
   }
 
-  if((array -> left == NULL) && (array -> right == NULL))
+  // Leaf node
+  if(((array -> left) == NULL) && ((array -> right) == NULL))
   {
     free(array);
     return NULL;
   }
 
-  if(array -> left == NULL)
+  // One member to the right
+  if((array -> left) == NULL)
   {
     SparseNode * node = array -> right;
     free(array);
     return node;
   }
 
-  if(array -> right == NULL)
+  // One member to the left
+  if((array -> right) == NULL)
   {
-    SparseNode * node = array -> left;
+    SparseNode * node2 = array -> left;
     free(array);
-    return node;
+    return node2;
   }
 
+  // Remember the location of the right member
   SparseNode * newNode = array -> right;
-  while(array -> right != NULL)
+
+  // Keep going to the left until it is empty
+  while((newNode -> left) != NULL)
   {
     newNode = newNode -> left;
   }
 
+  // Copy the index and value in to the new node
   array -> index = newNode -> index;
+  array -> value = newNode -> value;
   newNode -> index = index;
 
+  //Go through the function again
   array -> right = SparseArray_remove(array -> right, index);
   return array;
 }
@@ -312,27 +337,33 @@ SparseNode * SparseArray_remove ( SparseNode * array, int index )
 
 SparseNode * SparseArray_copy(SparseNode * array)
 {
+  // If array is NULL, return NULL
   if(array == NULL)
   {
     return NULL;
   }
 
+  // Allocate space for a new node
   SparseNode * newNode = malloc(sizeof(SparseNode));
 
+  // Check for memory errors
   if(newNode == NULL)
   {
     printf("Memory Allocated Incorrectly (SparseArray_copy).\n");
     return NULL;
   }
 
+  // Set values
   newNode -> left = NULL;
   newNode -> right = NULL;
   newNode -> index = array -> index;
   newNode -> value = array -> value;
 
+  // Deep copy, parse through rest of the binary tree
   newNode -> right = SparseArray_copy(array -> right);
   newNode -> left = SparseArray_copy(array -> left);
 
+  // Return binary tree
   return newNode;
 }
 
@@ -363,38 +394,57 @@ SparseNode * SparseArray_copy(SparseNode * array)
 
 SparseNode * SparseArray_merge(SparseNode * array_1, SparseNode * array_2)
 {
-  /*
-  SparseNode * copy = NULL;
-  copy = SparseArray_copy(array_1);
-
-  while(array_2 != NULL)
-  {
-    copy = SparseArray_insert(copy, array_2 -> value, array_2 -> index);
-
-    if(SparseArray_getNode(copy, array_2 -> index) -> value == 0)
-    {
-      copy = SparseArray_remove(copy, array_2 -> index);
-    }
-
-    array_2 = array_2 -> left;
-  }
-
-  return copy;
-  */
-  
+  // Copy the first array into a copy array
   SparseNode * copy = SparseArray_copy(array_1);
 
+  // If array_2 isn't NULL merge it, if it is just return the copy of array_1
+  if(array_2 != NULL)
+  {
+    // Call the merge helper function
+    SparseArray_merge_helper(copy, array_2);
+
+    // Check if the binary tree is empty, if it is, set copy equal to NULL
+    if(copy -> value == 0)
+    {
+      copy = NULL;
+    }
+  }
+
+  // Return binary tree
   return copy;
 }
 
-void SparseArray_print(SparseNode * array)
+void SparseArray_merge_helper(SparseNode * n1, SparseNode * n2)
 {
-  if(array == NULL)
+  if(n2 == NULL)
   {
     return;
   }
 
-  SparseArray_print(array -> left);
-  printf("%d: %d - ", array -> index, array -> value);
-  SparseArray_print(array -> right);
+  // Go to the end of the binary tree
+  SparseArray_merge_helper(n1, n2 -> left);
+  SparseArray_merge_helper(n1, n2 -> right);
+
+  // Find the node that contains the index of the leaf node of n2
+  SparseNode * node = SparseArray_getNode(n1, n2 -> index);
+
+  // If there is no node with the same index
+  if(node == NULL)
+  {
+    n1 = SparseArray_insert(n1, n2 -> index, n2 -> value);
+  }
+  // If there is a node with the same index
+  else
+  {
+    // If the values are opposite values, remove the node
+    if(((node -> value) + (n2 -> value)) == 0 )
+    {
+      n1 = SparseArray_remove(n1, node -> index);
+    }
+    else
+    // If the values are different values that aren't oppositves, add them up and set the value equal to their sum
+    {
+      n1 = SparseArray_insert(n1, n2 -> index, (n2 -> value) + (node -> value));
+    }
+  }
 }

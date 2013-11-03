@@ -8,6 +8,7 @@ typedef struct snode {
   struct snode * right;
 } SparseNode ;
 
+void SparseArray_print(SparseNode *);
 SparseNode * SparseNode_create(int index, int value);
 SparseNode * SparseArray_build(int * indicies, int * values, int length);
 void SparseArray_destroy ( SparseNode * array );

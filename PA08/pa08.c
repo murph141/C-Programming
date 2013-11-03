@@ -8,6 +8,53 @@
 
 int main ( int argc , char ** argv )
 {
+  /*
+  int ind[3] = {3, 1, 5};
+  int val[3] = {2, 6, 8};
+  SparseNode * n1 = NULL;
+  n1 = SparseArray_build(ind, val, 3);
+
+  SparseArray_print(n1);
+
+  int x = SparseArray_getMin(n1);
+  printf("\nx: %d\n", x);
+
+
+  int y = SparseArray_getMax(n1);
+  printf("y: %d\n", y);
+
+
+  printf("\n\n");
+  int ind2[4] = {3, 2, 5, 16};
+  int val2[4] = {-2, 6, 3, -7};
+  SparseNode * n2 = NULL;
+  n2 = SparseArray_build(ind2, val2, 4);
+
+  SparseArray_print(n2);
+
+  x = SparseArray_getMin(n2);
+  printf("\nx: %d\n", x);
+
+  y = SparseArray_getMax(n2);
+  printf("y: %d\n", y);
+  printf("\n\n\n");
+
+  n2 = SparseArray_remove(n2, 16);
+
+  SparseArray_print(n2);
+
+  printf("\n\n\n");
+
+
+  printf("Attenmpting to merge\n");
+  SparseNode * n3 = NULL;
+  n3 = SparseArray_merge(n1, n2);
+
+  SparseArray_print(n3);
+
+  printf("\n\n");
+  */
+
   int i; //index
 
   //check arguments
