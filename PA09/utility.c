@@ -2,40 +2,87 @@
 #include<stdlib.h>
 #include "pa09.h"
 
-HuffNode * huff_create(FILE * fptr)
+HuffNode * huff_create(FILE * fptr, int bit)
 {
+  int done = 0;
+  int cmdloc = 0;
   Stack * st = NULL;
-
-  HuffNode * hf = NULL;
-  HuffNode * pointer = NULL;
+  HuffNode * root = NULL;
 
   unsigned char info;
+  unsigned char masks[] = {0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01};
 
-  while(!feof(fptr))
+  while(!done)
   {
-    if(fgetc(fptr) == 49)
+    if(!bit)
     {
-      info = fgetc(fptr);
-      printf("%c\n", info);
-      hf = huff_make(info);
-      st = stack_push(st, hf); //getByte / getBit
-    }
-    else
-    {
-      pointer = st -> node;
-      //A is a huffnode pointer
-
-      if(st == NULL)
+      if(fgetc(fptr) == 49)
       {
-        return pointer;
+        info = fgetc(fptr);
+        HuffNode * hf = huff_make(info);
+        st = stack_push(st, hf);
       }
       else
       {
-        // pop the stack
+        HuffNode * A = st -> node;
+        st = stack_pop(st);
+
+        if(st == NULL)
+        {
+          root = A;
+          done = 1;
+        }
+        else
+        {
+          HuffNode * B = st -> node;
+          st = stack_pop(st);
+          HuffNode * C = malloc(sizeof(HuffNode));
+          C -> value = ' ';
+          C -> right = A;
+          C -> left = B;
+          st = stack_push(st, C);
+        }
+      }
+    }
+    else
+    {
+      if((fgetc(fptr) & masks[cmdloc]) != 0)
+      {
+        info = fgetc(fptr) & masks[cmdloc];
+        info = info >> cmdloc;
+        
+        cmdloc = (cmdloc + 2) % 8;
+
+        HuffNode * hf = huff_make(info);
+        st = stack_push(st, hf);
+      }
+      else
+      {
+        HuffNode * A = st -> node;
+        st = stack_pop(st);
+
+        cmdloc = (cmdloc + 1) % 8;
+
+        if(st == NULL)
+        {
+          root = A;
+          done = 1;
+        }
+        else
+        {
+          HuffNode * B = st -> node;
+          st = stack_pop(st);
+          HuffNode * C = malloc(sizeof(HuffNode));
+          C -> value = ' ';
+          C -> right = A;
+          C -> left = B;
+          st = stack_push(st, C);
+        }
       }
     }
   }
-  return hf;
+
+  return root;
 }
 
 
@@ -65,6 +112,7 @@ void huff_print(HuffNode * tree, FILE * fptr)
   {
     fprintf(fptr, "Leaf: %c\n", tree->value);
   }
+  free(tree);
 }
 
 
@@ -89,7 +137,7 @@ HuffNode * huff_make(int val)
 Stack * stack_push(Stack * st, HuffNode * hf)
 {
   Stack * newnode = stack_create(hf);
-  newnode -> next = NULL;
+  newnode -> next = st;
 
   return newnode;
 }
@@ -110,4 +158,16 @@ Stack * stack_create(HuffNode * hf)
   st -> next = NULL;
 
   return st;
+}
+
+Stack * stack_pop(Stack * st)
+{
+  if(st == NULL)
+  {
+    return NULL;
+  }
+
+  Stack * b = st -> next;
+  free(st);
+  return b;
 }
