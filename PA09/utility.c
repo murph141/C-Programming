@@ -9,7 +9,9 @@ HuffNode * huff_create(FILE * fptr, int bit)
   Stack * st = NULL;
   HuffNode * root = NULL;
 
+  int first = 1;
   unsigned char info;
+  unsigned char info2;
   unsigned char masks[] = {0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01};
 
   while(!done)
@@ -46,15 +48,35 @@ HuffNode * huff_create(FILE * fptr, int bit)
     }
     else
     {
-      if((fgetc(fptr) & masks[cmdloc]) != 0)
+      if(first)
       {
-        info = fgetc(fptr) & masks[cmdloc];
-        info = info >> cmdloc;
-        
-        cmdloc = (cmdloc + 2) % 8;
+        info = fgetc(fptr);
+        first = 0;
+      }
+
+      if((info & masks[cmdloc]) != 0)
+      {
+        info2 = fgetc(fptr);
+        //printf("info: %d\n", info);
+        //printf("info2: %d\n", info2);
+        //printf("info2 (shifted): %d\n", info2 >> (7 - cmdloc));
+        info <<= (cmdloc + 1);
+        //printf("info (shifted): %d\n", info);
+        info = (info2 >> (7 - cmdloc)) | info;
+        //printf("Info (ored): %d\n", info);
+        //printf("%c\n", info);
 
         HuffNode * hf = huff_make(info);
         st = stack_push(st, hf);
+
+        cmdloc = (cmdloc + 1) % 8;
+
+        if(!cmdloc)
+        {
+          info2 = fgetc(fptr);
+        }
+
+        info = info2;
       }
       else
       {
@@ -81,7 +103,6 @@ HuffNode * huff_create(FILE * fptr, int bit)
       }
     }
   }
-
   return root;
 }
 
