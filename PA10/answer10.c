@@ -1,4 +1,3 @@
-
 #include "pa10.h"
 #include "tree.h"
 #include <stdio.h>
@@ -8,12 +7,23 @@
 #define TRUE 1
 #define FALSE 0
 
+//Function declarations
+int locate(int *, int, int);
+void destroy_helper(ListNode *);
+int findmax(int *, int);
+int findmin(int *, int);
+void permute(int *, int, int);
+void swap(int *, int*);
+
 /**
  * Returns a pointer to a new empty stack.
  */
 Stack * Stack_create()
 {
-  return NULL;
+  Stack * stack = malloc(sizeof(Stack));
+  stack -> list = NULL;
+
+  return stack;
 }
 
 /**
@@ -23,7 +33,24 @@ Stack * Stack_create()
  */
 void Stack_destroy(Stack * stack)
 {
+  if(stack == NULL)
+  {
+    return;
+  }
 
+  destroy_helper(stack -> list);
+  free(stack);
+}
+
+void destroy_helper(ListNode * list)
+{
+  if(list == NULL)
+  {
+    return;
+  }
+
+  destroy_helper(list -> next);
+  free(list);
 }
 
 /**
@@ -31,6 +58,11 @@ void Stack_destroy(Stack * stack)
  */
 int Stack_isEmpty(Stack * stack)
 {
+  if(stack -> list == NULL)
+  {
+    return TRUE;
+  }
+
   return FALSE;
 }
 
@@ -43,7 +75,18 @@ int Stack_isEmpty(Stack * stack)
  */
 int Stack_pop(Stack * stack)
 {
-  return -1;
+  if(stack == NULL)
+  {
+    return -1;
+  }
+
+  int value = stack -> list -> value;
+
+  ListNode * list = stack -> list;
+  stack -> list = list -> next;
+  free(list);
+
+  return value;
 }
 
 /**
@@ -55,7 +98,12 @@ int Stack_pop(Stack * stack)
  */
 void Stack_push(Stack * stack, int value)
 {
+  ListNode * list = malloc(sizeof(ListNode));
 
+  list -> value = value;
+  list -> next = stack -> list;
+
+  stack -> list = list;
 }
 
 /**
@@ -80,7 +128,35 @@ void Stack_push(Stack * stack, int value)
  */
 void stackSort(int * array, int len)
 {
+  if(!isStackSortable(array, len))
+  {
+    return;
+  }
 
+  int write_index = 0;
+  int ind = 0;
+  int value = 0;
+
+  Stack * st = Stack_create();
+
+  for(; ind < len; ind++)
+  {
+    while(st -> list != NULL && (st -> list -> value < array[ind]))
+    {
+      value = Stack_pop(st);
+      array[write_index] = value;
+      write_index++;
+    }
+    Stack_push(st, array[ind]);
+  }
+  while(st -> list != NULL)
+  {
+    value = Stack_pop(st);
+    array[write_index] = value;
+    write_index++;
+  }
+
+  Stack_destroy(st);
 }
 
 /**
@@ -101,8 +177,101 @@ void stackSort(int * array, int len)
  */
 int isStackSortable(int * array, int len)
 {
-  return FALSE;
+  if(len < 3)
+  {
+    return TRUE;
+  }
+
+  int max = findmax(array, len);
+  int loc = locate(array, max, len);
+
+  if(loc == len - 1)
+  {
+    return isStackSortable(array, loc);
+  }
+  else if(loc == 0)
+  {
+    return isStackSortable(array + 1, len - 1);
+  }
+  else
+  {
+    if(findmax(array, loc) >= findmin(&array[loc + 1], len - loc - 1))
+    {
+      return FALSE;
+    }
+  }
+
+  return (isStackSortable(array, loc) * isStackSortable(&array[loc + 1], len - loc - 1));
 }
+
+int locate(int * array, int val, int len)
+{
+  int i = 0;
+  int loc = 0;
+
+  for(; i < len; i++)
+  {
+    if(array[i] != val)
+    {
+      loc++;
+    }
+    else
+    {
+      i = len;
+    }
+  }
+
+  return loc;
+}
+
+
+int findmax(int * array, int len)
+{
+  int ind;
+  int max;
+
+  for(ind = 0; ind < len; ind++)
+  {
+    if(!ind)
+    {
+      max = array[ind];
+    }
+    else
+    {
+      if(max < array[ind])
+      {
+        max = array[ind];
+      }
+    }
+  }
+
+  return max;
+}
+
+
+int findmin(int * array, int len)
+{
+  int ind;
+  int min;
+
+  for(ind = 0; ind < len; ind++)
+  {
+    if(!ind)
+    {
+      min = array[ind];
+    }
+    else
+    {
+      if(min > array[ind])
+      {
+        min = array[ind];
+      }
+    }
+  }
+
+  return min;
+}
+
 
 /**
  * Generates (and prints) all the unique binary tree shapes of size k
@@ -121,5 +290,41 @@ int isStackSortable(int * array, int len)
  */
 void genShapes(int k)
 {
+  int arr[k];
+  int index;
 
+  for(index = 0; index < k; index++)
+  {
+    arr[index] = index;
+  }
+
+  permute(arr, k, 0);
+}
+
+void permute(int * array, int k, int index)
+{
+  if (index == k)
+  {
+    if(isStackSortable(array, k))
+    {
+      TreeNode * tr = Tree_build(array, k);
+      Tree_printShape(tr);
+      Tree_destroy(tr);
+    }
+  }
+
+  int ind = index;
+  for(; ind < k; ind++)
+  {
+    swap(&array[ind], &array[index]);
+    permute(array, k, index + 1);
+    swap(&array[ind], &array[index]);
+  }
+}
+
+void swap(int * array, int * array2)
+{
+  int t = *array;
+  *array = *array2;
+  *array2 = t;
 }

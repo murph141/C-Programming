@@ -1,4 +1,3 @@
-
 #include "tree.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -67,4 +66,3 @@ void Tree_printShape(TreeNode * node)
   Tree_printShapeHelper(node);
   printf("\n");
 }
-
