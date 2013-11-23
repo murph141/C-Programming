@@ -1,9 +1,12 @@
-
 #include "pa11.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#define PUZZLESIZE 16
+
+int compare(const void *, const void *);
+int string_locate(char *, int, char);
+void char_swap(char *, char *);
 
 /**
   IMPORTANT INFORMATION
@@ -52,8 +55,43 @@
  */
 int isValidState(const char * state)
 {
+  if(strlen(state) == PUZZLESIZE)
+  {
+    char * copy = malloc(sizeof(char) * PUZZLESIZE);
+    strcpy(copy, state);
+
+    qsort(copy, PUZZLESIZE, sizeof(char), compare);
+
+    if(!strcmp(copy, "-123456789ABCDEF"))
+    {
+      free(copy);
+      return TRUE;
+    }
+    free(copy);
+  }
+
+  return FALSE;
+}
+
+//Compare the two values
+int compare(const void * s1, const void * s2)
+{
+  int int1 = * (char *) s1;
+  int int2 = * (char *) s2;
+
+  if(int1 < int2)
+  {
+    return -1;
+  }
+
+  if(int1 > int2)
+  {
+    return 1;
+  }
+
   return 0;
 }
+
 
 /** 
  * Return TRUE iff all characters in 'moves' are in "RLUD"
@@ -63,7 +101,17 @@ int isValidState(const char * state)
  */ 
 int isValidMoveList(const char * moves)
 {
-  return 0;
+  int i = 0;
+  while(moves[i] != '\0')
+  {
+    if(moves[i] != 'R' && moves[i] != 'L' && moves[i] != 'U' && moves[i] != 'D')
+    {
+      return FALSE;
+    }
+    i++;
+  }
+
+  return TRUE;
 }
 
 /**
@@ -108,7 +156,68 @@ void printPuzzle(const char * state)
  */
 int move(char * state, char m)
 {    
+  int location = string_locate(state, PUZZLESIZE, '-');
+  int row = location / SIDELENGTH;
+  int col = location % SIDELENGTH;
+
+  int new_row = row;
+  int new_col = col;
+
+  switch(m)
+  {
+    case 'U':
+      new_row--;
+      break;
+    case 'D':
+      new_row++;
+      break;
+    case 'L':
+      new_col--;
+      break;
+    case 'R':
+      new_col++;
+      break;
+    default:
+      printf("Invalid move entered\n");
+      return FALSE;
+  }
+
+  if((new_row < 0 || new_col < 0) || (new_row > SIDELENGTH || new_col > SIDELENGTH))
+  {
+    return FALSE;
+  }
+
+  int new_pos = new_row * SIDELENGTH + new_col;
+
+  char_swap(&state[location], &state[new_pos]);
+
   return TRUE;
+}
+
+
+void char_swap(char * c1, char * c2)
+{
+  char temp = * c1;
+  * c1 = * c2;
+  * c2 = temp;
+}
+
+
+int string_locate(char * string, int length, char needle)
+{
+  int i = 0;
+  int location = 0;
+
+  for(; i < length; i++)
+  {
+    if(string[i] == needle)
+    {
+      i = length;
+    }
+    location++;
+  }
+
+  return location;
 }
 
 /**
@@ -163,7 +272,7 @@ MoveTree * MoveTree_insert(MoveTree * node, const char * state,
  */
 MoveTree * MoveTree_find(MoveTree * node, const char * state)
 {
-
+  return NULL;
 }
 
 /**
