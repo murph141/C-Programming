@@ -20,8 +20,8 @@ void swap(int *, int*);
  */
 Stack * Stack_create()
 {
-  Stack * stack = malloc(sizeof(Stack));
-  stack -> list = NULL;
+  Stack * stack = malloc(sizeof(Stack)); //Allocate space
+  stack -> list = NULL; //Make the pointer to the next list NULL
 
   return stack;
 }
@@ -35,11 +35,11 @@ void Stack_destroy(Stack * stack)
 {
   if(stack == NULL)
   {
-    return;
+    return; //Return if stack is NULL
   }
 
-  destroy_helper(stack -> list);
-  free(stack);
+  destroy_helper(stack -> list); //Call the helper function to take care of the linked list
+  free(stack); //Free the stack
 }
 
 void destroy_helper(ListNode * list)
@@ -49,8 +49,8 @@ void destroy_helper(ListNode * list)
     return;
   }
 
-  destroy_helper(list -> next);
-  free(list);
+  destroy_helper(list -> next); //Call the function again with the next list
+  free(list); //Free the current list
 }
 
 /**
@@ -58,7 +58,7 @@ void destroy_helper(ListNode * list)
  */
 int Stack_isEmpty(Stack * stack)
 {
-  if(stack -> list == NULL)
+  if(stack -> list == NULL) //If the stack is empty, return true
   {
     return TRUE;
   }
@@ -75,18 +75,18 @@ int Stack_isEmpty(Stack * stack)
  */
 int Stack_pop(Stack * stack)
 {
-  if(stack == NULL)
+  if(stack == NULL) //If stack is NULL, return a negative number
   {
     return -1;
   }
 
-  int value = stack -> list -> value;
+  int value = stack -> list -> value; //Set the value to the first linked list item's value
 
-  ListNode * list = stack -> list;
-  stack -> list = list -> next;
-  free(list);
+  ListNode * list = stack -> list; //Make a linked list pointer to the first item of the stack
+  stack -> list = list -> next; //Have the stack point to the second item in the linked list
+  free(list); //Free the first item in the linked list
 
-  return value;
+  return value; //Return the value that was popped off of the stack
 }
 
 /**
@@ -96,14 +96,15 @@ int Stack_pop(Stack * stack)
  * (1) Create a new ListNode with 'value' for it's value.
  * (2) Push that new ListNode onto the front of the stack's list.
  */
+
 void Stack_push(Stack * stack, int value)
 {
-  ListNode * list = malloc(sizeof(ListNode));
+  ListNode * list = malloc(sizeof(ListNode)); //Allocate space for a linked list item
 
-  list -> value = value;
-  list -> next = stack -> list;
+  list -> value = value; //Set the list value to the given value
+  list -> next = stack -> list; //Set the next list item to the first stack item
 
-  stack -> list = list;
+  stack -> list = list; //Set the first linked list item to the linked list pointer
 }
 
 /**
@@ -128,35 +129,35 @@ void Stack_push(Stack * stack, int value)
  */
 void stackSort(int * array, int len)
 {
-  if(!isStackSortable(array, len))
+  if(!isStackSortable(array, len)) //Don't do anything if you are unable to sort the stack
   {
     return;
   }
 
-  int write_index = 0;
-  int ind = 0;
-  int value = 0;
+  int write_index = 0; //the write index
+  int ind = 0; //the index of the array
+  int value = 0; //the value that will store the value that will be popped off the stack
 
-  Stack * st = Stack_create();
+  Stack * st = Stack_create(); //Create a new stack
 
   for(; ind < len; ind++)
   {
     while(st -> list != NULL && (st -> list -> value < array[ind]))
     {
       value = Stack_pop(st);
-      array[write_index] = value;
-      write_index++;
+      array[write_index] = value; //Put the popped value into an array
+      write_index++; //Increment the write index
     }
-    Stack_push(st, array[ind]);
+    Stack_push(st, array[ind]); //Push the item on to the stack
   }
   while(st -> list != NULL)
   {
     value = Stack_pop(st);
-    array[write_index] = value;
-    write_index++;
+    array[write_index] = value; //Put the popped value into an array
+    write_index++; //Increment the write index
   }
 
-  Stack_destroy(st);
+  Stack_destroy(st); //Destroy the stack
 }
 
 /**
@@ -177,19 +178,19 @@ void stackSort(int * array, int len)
  */
 int isStackSortable(int * array, int len)
 {
-  if(len < 3)
+  if(len < 3) //If length is less than 3, the stack is automatically sortable
   {
     return TRUE;
   }
 
-  int max = findmax(array, len);
-  int loc = locate(array, max, len);
+  int max = findmax(array, len); //Find the max value
+  int loc = locate(array, max, len); //Find the location of the max value
 
-  if(loc == len - 1)
+  if(loc == len - 1) //If you are at the end of the array, just call the function again with the first part
   {
     return isStackSortable(array, loc);
   }
-  else if(loc == 0)
+  else if(loc == 0) //If you are at the beginning of the array, just call the function again with the second part
   {
     return isStackSortable(array + 1, len - 1);
   }
@@ -201,46 +202,46 @@ int isStackSortable(int * array, int len)
     }
   }
 
-  return (isStackSortable(array, loc) * isStackSortable(&array[loc + 1], len - loc - 1));
+  return (isStackSortable(array, loc) * isStackSortable(&array[loc + 1], len - loc - 1)); //Return the first half and the second half outcomes multiplied by each other
 }
 
 int locate(int * array, int val, int len)
 {
-  int i = 0;
-  int loc = 0;
+  int i = 0; //Temp value
+  int loc = 0; //Location value
 
   for(; i < len; i++)
   {
     if(array[i] != val)
     {
-      loc++;
+      loc++; //Increment the location value
     }
     else
     {
-      i = len;
+      i = len; //If value is found, exit the loop
     }
   }
 
-  return loc;
+  return loc; //Return the location
 }
 
 
 int findmax(int * array, int len)
 {
-  int ind;
-  int max;
+  int ind; //Index value
+  int max; //Max value
 
   for(ind = 0; ind < len; ind++)
   {
     if(!ind)
     {
-      max = array[ind];
+      max = array[ind]; //Max is equal to the first item scanned in
     }
     else
     {
       if(max < array[ind])
       {
-        max = array[ind];
+        max = array[ind]; //Max is equal to the new higher value
       }
     }
   }
@@ -251,20 +252,20 @@ int findmax(int * array, int len)
 
 int findmin(int * array, int len)
 {
-  int ind;
-  int min;
+  int ind; //Index value
+  int min; //Min value
 
   for(ind = 0; ind < len; ind++)
   {
     if(!ind)
     {
-      min = array[ind];
+      min = array[ind]; //Min is equal to the first item scanned in
     }
     else
     {
       if(min > array[ind])
       {
-        min = array[ind];
+        min = array[ind]; //Min is equal to the new lower value
       }
     }
   }
@@ -290,41 +291,41 @@ int findmin(int * array, int len)
  */
 void genShapes(int k)
 {
-  int arr[k];
-  int index;
+  int arr[k]; //Create the array with k values
+  int index; //Hold the index values
 
   for(index = 0; index < k; index++)
   {
-    arr[index] = index;
+    arr[index] = index; //Populate the array with values 0 through k-1
   }
 
-  permute(arr, k, 0);
+  permute(arr, k, 0); //Call the permute function
 }
 
 void permute(int * array, int k, int index)
 {
-  if (index == k)
+  if (index == k) //Call if the values are equal
   {
-    if(isStackSortable(array, k))
+    if(isStackSortable(array, k)) //Check for sortability
     {
-      TreeNode * tr = Tree_build(array, k);
-      Tree_printShape(tr);
-      Tree_destroy(tr);
+      TreeNode * tr = Tree_build(array, k); //Create a binary tree
+      Tree_printShape(tr); //Print the binary tree
+      Tree_destroy(tr); //Destroy the binary tree
     }
   }
 
-  int ind = index;
+  int ind = index; //Set ind to the index value
   for(; ind < k; ind++)
   {
-    swap(&array[ind], &array[index]);
-    permute(array, k, index + 1);
-    swap(&array[ind], &array[index]);
+    swap(&array[ind], &array[index]); //Swap values
+    permute(array, k, index + 1); //Call the permute function with the swapped valuse
+    swap(&array[ind], &array[index]); //Swap the values back
   }
 }
 
 void swap(int * array, int * array2)
 {
-  int t = *array;
-  *array = *array2;
-  *array2 = t;
+  int t = *array; //Save the first value
+  *array = *array2; //Set the first value to the second value
+  *array2 = t; //Set the second value to the saved first value
 }
