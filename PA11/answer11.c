@@ -235,15 +235,76 @@ int string_locate(char * string, int length, char needle)
  */
 void processMoveList(char * state, const char * movelist)
 {
+  char m;
+  int i = 0;
 
+  for(m = movelist[i]; m != '\0'; i++)
+  {
+    int test = move(state, m);
+
+    if(!test)
+    {
+      printf("I\n");
+      return;
+    }
+  }
+
+  printf("%s\n", state);
 }
+
 
 /**
  * Initialise a new MoveTree
  */
 MoveTree * MoveTree_create(const char * state, const char * moves)
 {
-  return NULL;
+  MoveTree * tree = malloc(sizeof(MoveTree));
+
+  if(tree == NULL)
+  {
+    printf("Memory allocated incorrectly (MoveTree_create)\n");
+    return NULL;
+  }
+
+  tree -> state = malloc(sizeof(char) * PUZZLESIZE);
+
+  if (tree -> state == NULL)
+  {
+    printf("Memory allocated incorrectly (MoveTree_create)\n");
+    return NULL;
+  }
+
+  int i = 0;
+  for(; i < PUZZLESIZE; i++)
+  {
+    tree -> state[i] = state[i];
+  }
+
+  i = 0;
+
+  while(moves[i] == 'R' || moves[i] == 'L' || moves[i] || 'U' || moves[i] == 'D')
+  {
+    i++;
+  }
+
+  tree -> moves = malloc(sizeof(char) * i);
+
+  if(tree -> moves == NULL)
+  {
+    printf("Memory allocated incorrectly (MoveTree_create)\n");
+    return NULL;
+  }
+
+  int j = 0;
+  for(; j < i; j++)
+  {
+    tree -> moves[j] = moves[j];
+  }
+
+  tree -> left = NULL;
+  tree -> right = NULL;
+
+  return tree;
 }
 
 /**
@@ -251,7 +312,17 @@ MoveTree * MoveTree_create(const char * state, const char * moves)
  */
 void MoveTree_destroy(MoveTree * node)
 {
+  if(node == NULL)
+  {
+    return;
+  }
 
+  MoveTree_destroy(node -> left);
+  MoveTree_destroy(node -> right);
+
+  free(node -> state);
+  free(node -> moves);
+  free(node);
 }
 
 /**
@@ -260,8 +331,7 @@ void MoveTree_destroy(MoveTree * node)
  * (2) If we attempt to insert a duplicate state, then we keep the
  *     node with the shortest move sequence.
  */
-MoveTree * MoveTree_insert(MoveTree * node, const char * state,
-    const char * moves)
+MoveTree * MoveTree_insert(MoveTree * node, const char * state, const char * moves)
 {
   return NULL;
 }
