@@ -1,9 +1,12 @@
-
 #include "pa11.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#define PUZZLESIZE 16
+
+int compare(const void *, const void *);
+int string_locate(char *, int, char);
+void char_swap(char *, char *);
 
 /**
   IMPORTANT INFORMATION
@@ -52,8 +55,43 @@
  */
 int isValidState(const char * state)
 {
+  if(strlen(state) == PUZZLESIZE)
+  {
+    char * copy = malloc(sizeof(char) * PUZZLESIZE);
+    strcpy(copy, state);
+
+    qsort(copy, PUZZLESIZE, sizeof(char), compare);
+
+    if(!strcmp(copy, "-123456789ABCDEF"))
+    {
+      free(copy);
+      return TRUE;
+    }
+    free(copy);
+  }
+
+  return FALSE;
+}
+
+//Compare the two values
+int compare(const void * s1, const void * s2)
+{
+  int int1 = * (char *) s1;
+  int int2 = * (char *) s2;
+
+  if(int1 < int2)
+  {
+    return -1;
+  }
+
+  if(int1 > int2)
+  {
+    return 1;
+  }
+
   return 0;
 }
+
 
 /** 
  * Return TRUE iff all characters in 'moves' are in "RLUD"
@@ -63,7 +101,17 @@ int isValidState(const char * state)
  */ 
 int isValidMoveList(const char * moves)
 {
-  return 0;
+  int i = 0;
+  while(moves[i] != '\0')
+  {
+    if(moves[i] != 'R' && moves[i] != 'L' && moves[i] != 'U' && moves[i] != 'D')
+    {
+      return FALSE;
+    }
+    i++;
+  }
+
+  return TRUE;
 }
 
 /**
@@ -108,7 +156,68 @@ void printPuzzle(const char * state)
  */
 int move(char * state, char m)
 {    
+  int location = string_locate(state, PUZZLESIZE, '-');
+  int row = location / SIDELENGTH;
+  int col = location % SIDELENGTH;
+
+  int new_row = row;
+  int new_col = col;
+
+  switch(m)
+  {
+    case 'U':
+      new_row--;
+      break;
+    case 'D':
+      new_row++;
+      break;
+    case 'L':
+      new_col--;
+      break;
+    case 'R':
+      new_col++;
+      break;
+    default:
+      printf("Invalid move entered\n");
+      return FALSE;
+  }
+
+  if((new_row < 0 || new_col < 0) || (new_row > SIDELENGTH || new_col > SIDELENGTH))
+  {
+    return FALSE;
+  }
+
+  int new_pos = new_row * SIDELENGTH + new_col;
+
+  char_swap(&state[location], &state[new_pos]);
+
   return TRUE;
+}
+
+
+void char_swap(char * c1, char * c2)
+{
+  char temp = * c1;
+  * c1 = * c2;
+  * c2 = temp;
+}
+
+
+int string_locate(char * string, int length, char needle)
+{
+  int i = 0;
+  int location = 0;
+
+  for(; i < length; i++)
+  {
+    if(string[i] == needle)
+    {
+      i = length;
+    }
+    location++;
+  }
+
+  return location;
 }
 
 /**
@@ -126,15 +235,76 @@ int move(char * state, char m)
  */
 void processMoveList(char * state, const char * movelist)
 {
+  char m;
+  int i = 0;
 
+  for(m = movelist[i]; m != '\0'; i++)
+  {
+    int test = move(state, m);
+
+    if(!test)
+    {
+      printf("I\n");
+      return;
+    }
+  }
+
+  printf("%s\n", state);
 }
+
 
 /**
  * Initialise a new MoveTree
  */
 MoveTree * MoveTree_create(const char * state, const char * moves)
 {
-  return NULL;
+  MoveTree * tree = malloc(sizeof(MoveTree));
+
+  if(tree == NULL)
+  {
+    printf("Memory allocated incorrectly (MoveTree_create)\n");
+    return NULL;
+  }
+
+  tree -> state = malloc(sizeof(char) * PUZZLESIZE);
+
+  if (tree -> state == NULL)
+  {
+    printf("Memory allocated incorrectly (MoveTree_create)\n");
+    return NULL;
+  }
+
+  int i = 0;
+  for(; i < PUZZLESIZE; i++)
+  {
+    tree -> state[i] = state[i];
+  }
+
+  i = 0;
+
+  while(moves[i] == 'R' || moves[i] == 'L' || moves[i] || 'U' || moves[i] == 'D')
+  {
+    i++;
+  }
+
+  tree -> moves = malloc(sizeof(char) * i);
+
+  if(tree -> moves == NULL)
+  {
+    printf("Memory allocated incorrectly (MoveTree_create)\n");
+    return NULL;
+  }
+
+  int j = 0;
+  for(; j < i; j++)
+  {
+    tree -> moves[j] = moves[j];
+  }
+
+  tree -> left = NULL;
+  tree -> right = NULL;
+
+  return tree;
 }
 
 /**
@@ -142,7 +312,17 @@ MoveTree * MoveTree_create(const char * state, const char * moves)
  */
 void MoveTree_destroy(MoveTree * node)
 {
+  if(node == NULL)
+  {
+    return;
+  }
 
+  MoveTree_destroy(node -> left);
+  MoveTree_destroy(node -> right);
+
+  free(node -> state);
+  free(node -> moves);
+  free(node);
 }
 
 /**
@@ -151,8 +331,7 @@ void MoveTree_destroy(MoveTree * node)
  * (2) If we attempt to insert a duplicate state, then we keep the
  *     node with the shortest move sequence.
  */
-MoveTree * MoveTree_insert(MoveTree * node, const char * state,
-    const char * moves)
+MoveTree * MoveTree_insert(MoveTree * node, const char * state, const char * moves)
 {
   return NULL;
 }
@@ -163,7 +342,7 @@ MoveTree * MoveTree_insert(MoveTree * node, const char * state,
  */
 MoveTree * MoveTree_find(MoveTree * node, const char * state)
 {
-
+  return NULL;
 }
 
 /**
