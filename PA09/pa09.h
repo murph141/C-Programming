@@ -12,13 +12,6 @@ typedef struct _stack {
   HuffNode * node;
 } Stack; //StackNode
 
-// Typedef used is from Aaron Michaux
-typedef struct {
-  FILE * fp;
-  unsigned char byte;
-  int remaining;
-} BITFILE;
-
 
 void huff_print(HuffNode *, FILE *);
 HuffNode * huff_create(FILE *, int);
@@ -26,6 +19,5 @@ HuffNode * huff_make(int);
 Stack * stack_push(Stack *, HuffNode *);
 Stack * stack_create(HuffNode *);
 Stack * stack_pop(Stack *);
-int getBit(BITFILE *);
 
 #endif

@@ -28,17 +28,17 @@ void processMoveList(char * state, const char * movelist);
 
 // No two nodes in a MoveTree have the same 'state'
 typedef struct move_tree_st {
-  char * state;
-  char * moves;
-  struct move_tree_st * left;
-  struct move_tree_st * right;
+    char * state;
+    char * moves;
+    struct move_tree_st * left;
+    struct move_tree_st * right;
 } MoveTree;
 
 // Manipulating MoveTree
 MoveTree * MoveTree_create(const char * state, const char * moves);
 void MoveTree_destroy(MoveTree * node);
 MoveTree * MoveTree_insert(MoveTree * node, const char * state, 
-    const char * moves);
+			   const char * moves);
 MoveTree * MoveTree_find(MoveTree * node, const char * state);
 void MoveTree_print(MoveTree * node);
 
