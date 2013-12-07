@@ -3,10 +3,13 @@
 #include <stdlib.h>
 #include <string.h>
 #define PUZZLESIZE 16
+#define NUMBEROFMOVES 4
+#define SIDELENGTH 4
 
 int compare(const void *, const void *);
 int string_locate(char *, int, char);
 void char_swap(char *, char *);
+void generateAllHelper(MoveTree *, int, const char *, char *, int);
 
 /**
   IMPORTANT INFORMATION
@@ -36,7 +39,6 @@ void char_swap(char *, char *);
   isValidState("ABCDE");
   return 0;
   }
-
 */
 
 
@@ -57,12 +59,11 @@ int isValidState(const char * state)
 {
   if(strlen(state) == PUZZLESIZE)
   {
-    char * copy = malloc(sizeof(char) * PUZZLESIZE);
-    strcpy(copy, state);
+    char * copy = strdup(state);
 
     qsort(copy, PUZZLESIZE, sizeof(char), compare);
 
-    if(!strcmp(copy, "-123456789ABCDEF"))
+    if(strcmp(copy, "-123456789ABCDEF") == 0)
     {
       free(copy);
       return TRUE;
@@ -104,7 +105,7 @@ int isValidMoveList(const char * moves)
   int i = 0;
   while(moves[i] != '\0')
   {
-    if(moves[i] != 'R' && moves[i] != 'L' && moves[i] != 'U' && moves[i] != 'D')
+    if(!(moves[i] == 'R' || moves[i] == 'L' || moves[i] == 'U' || moves[i] == 'D'))
     {
       return FALSE;
     }
@@ -156,7 +157,7 @@ void printPuzzle(const char * state)
  */
 int move(char * state, char m)
 {    
-  int location = string_locate(state, PUZZLESIZE, '-');
+  int location = string_locate(state, PUZZLESIZE, '-') - 1;
   int row = location / SIDELENGTH;
   int col = location % SIDELENGTH;
 
@@ -178,11 +179,10 @@ int move(char * state, char m)
       new_col++;
       break;
     default:
-      printf("Invalid move entered\n");
       return FALSE;
   }
 
-  if((new_row < 0 || new_col < 0) || (new_row > SIDELENGTH || new_col > SIDELENGTH))
+  if((new_row < 0 || new_col < 0) || (new_row > (SIDELENGTH - 1) || new_col > (SIDELENGTH - 1)))
   {
     return FALSE;
   }
@@ -235,12 +235,11 @@ int string_locate(char * string, int length, char needle)
  */
 void processMoveList(char * state, const char * movelist)
 {
-  char m;
   int i = 0;
 
-  for(m = movelist[i]; m != '\0'; i++)
+  for(;movelist[i] != '\0'; i++)
   {
-    int test = move(state, m);
+    int test = move(state, movelist[i]);
 
     if(!test)
     {
@@ -266,42 +265,12 @@ MoveTree * MoveTree_create(const char * state, const char * moves)
     return NULL;
   }
 
-  tree -> state = malloc(sizeof(char) * PUZZLESIZE);
+  tree -> state = strdup(state);
 
-  if (tree -> state == NULL)
-  {
-    printf("Memory allocated incorrectly (MoveTree_create)\n");
-    return NULL;
-  }
-
-  int i = 0;
-  for(; i < PUZZLESIZE; i++)
-  {
-    tree -> state[i] = state[i];
-  }
-
-  i = 0;
-
-  while(moves[i] == 'R' || moves[i] == 'L' || moves[i] || 'U' || moves[i] == 'D')
-  {
-    i++;
-  }
-
-  tree -> moves = malloc(sizeof(char) * i);
-
-  if(tree -> moves == NULL)
-  {
-    printf("Memory allocated incorrectly (MoveTree_create)\n");
-    return NULL;
-  }
-
-  int j = 0;
-  for(; j < i; j++)
-  {
-    tree -> moves[j] = moves[j];
-  }
+  tree -> moves = strdup(moves);
 
   tree -> left = NULL;
+
   tree -> right = NULL;
 
   return tree;
@@ -333,7 +302,29 @@ void MoveTree_destroy(MoveTree * node)
  */
 MoveTree * MoveTree_insert(MoveTree * node, const char * state, const char * moves)
 {
-  return NULL;
+  if(node == NULL)
+  {
+    return MoveTree_create(state, moves);
+  }
+
+  if(strcmp(node -> state, state) < 0)
+  {
+    //Move to the right if the state is greater than the present state
+    node -> right = MoveTree_insert(node -> right, state, moves);
+  }
+  else if(strcmp(node -> state, state) > 0)
+  {
+    //Move to the left if the state is less than the present state
+    node -> left = MoveTree_insert(node -> left, state, moves);
+  }
+  else if(strlen(moves) < strlen(node -> moves))
+  {
+    //If at the correct place, copy over the new string is the new string is shorter
+    //Essentially, if if takes less moves to complete the puzzle replace the higher number of moves with the lower number of moves
+    strcpy(node -> moves, moves);
+  }
+
+  return node;
 }
 
 /**
@@ -342,7 +333,25 @@ MoveTree * MoveTree_insert(MoveTree * node, const char * state, const char * mov
  */
 MoveTree * MoveTree_find(MoveTree * node, const char * state)
 {
-  return NULL;
+  if(node == NULL)
+  {
+    //If the node is empty, return NULL
+    return NULL;
+  }
+
+  if(strcmp(node -> state, state) > 0)
+  {
+    //Move to the left if the string comparision is larger than 0
+    return MoveTree_find(node -> left, state);
+  }
+  else if(strcmp(node -> state, state) < 0)
+  {
+    //Move to the right if the string comparision is smaller than 0
+    return MoveTree_find(node -> right, state);
+  }
+
+  //If the comparison was 0, we found our node
+  return node;
 }
 
 /**
@@ -406,9 +415,50 @@ void MoveTree_print(MoveTree * node)
  * This is the most complex function to write... make sure you break
  * it down, and TEST EACH PART.
  */
+
+void generateAllHelper(MoveTree * root, int n_moves, const char * state, char * movelist, int ind)
+{
+  //Declaration as given in the comments above
+  char moveset[] = {'U', 'D', 'R', 'L'};
+
+  if(n_moves == ind)
+  {
+    //As stated, base case
+    return;
+  }
+
+  int i = 0;
+  for(; i < NUMBEROFMOVES; i++)
+  {
+    char moves = moveset[i];
+    char * state2 = strdup(state);
+
+    if(move(state2, moves))
+    {
+      movelist[ind] = moves;
+      movelist[ind + 1] = '\0';
+      MoveTree_insert(root, state2, movelist);
+      generateAllHelper(root, n_moves, state2, movelist, ind + 1);
+    }
+    free(state2);
+  }
+}
+
+
+
 MoveTree * generateAll(char * state, int n_moves)
 { 
-  return NULL;
+  MoveTree * tr = MoveTree_create(state, "");
+
+  char * moves = malloc(sizeof(char) * (n_moves + 1));
+
+  moves[n_moves] = '\0';
+
+  generateAllHelper(tr, n_moves, state, moves, 0);
+
+  free(moves);
+
+  return tr;
 }
 
 /**
@@ -420,6 +470,17 @@ MoveTree * generateAll(char * state, int n_moves)
  */
 char * solve(char * state)
 {
-  return NULL;
-}
+  MoveTree * tr = generateAll(state, MAX_SEARCH_DEPTH);
+  MoveTree * sol = MoveTree_find(tr, FINAL_STATE);
 
+  if(sol == NULL)
+  {
+    MoveTree_destroy(tr);
+    return NULL;
+  }
+
+  char * moves = strdup(sol -> moves);
+
+  MoveTree_destroy(tr);
+  return moves;
+}

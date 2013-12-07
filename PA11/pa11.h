@@ -37,8 +37,7 @@ typedef struct move_tree_st {
 // Manipulating MoveTree
 MoveTree * MoveTree_create(const char * state, const char * moves);
 void MoveTree_destroy(MoveTree * node);
-MoveTree * MoveTree_insert(MoveTree * node, const char * state, 
-			   const char * moves);
+MoveTree * MoveTree_insert(MoveTree * node, const char * state, const char * moves);
 MoveTree * MoveTree_find(MoveTree * node, const char * state);
 void MoveTree_print(MoveTree * node);
 
