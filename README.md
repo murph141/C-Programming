@@ -1,4 +1,4 @@
-ECE264
+Advanced C Programming
 ======
 
-ECE264 Solutions
+Solutions to my Advanced C Programming Course (Fall 2013)
